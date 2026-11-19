@@ -156,10 +156,10 @@ export const Header: React.FC<HeaderProps> = ({
                       role="option"
                       aria-selected={language === code}
                       onClick={() => { onChangeLanguage(code); setLanguageMenuOpen(false); }}
-                      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-150 ${language === code ? 'bg-[#EEF5FF]/85 text-[#125FC4] shadow-sm shadow-blue-900/[0.04]' : 'text-[#334155] hover:bg-white/65'}`}
+                      className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-150 hover:bg-[#E5F0FF]/95 hover:text-[#125FC4] hover:shadow-[inset_0_0_0_1px_rgba(27,117,232,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#1B75E8]/40 ${language === code ? 'bg-[#EEF5FF]/85 text-[#125FC4] shadow-sm shadow-blue-900/[0.04]' : 'text-[#334155]'}`}
                     >
-                      <span className={`flex h-7 w-8 items-center justify-center rounded-lg text-[10px] font-bold tracking-wide ${language === code ? 'bg-white/90 text-[#1B75E8] shadow-sm' : 'bg-[#F1F4F8]/75 text-[#64748B]'}`}>{code.toUpperCase()}</span>
-                      <span className="flex-1 text-sm font-medium">{name}</span>
+                      <span className={`flex h-7 w-8 items-center justify-center rounded-lg text-[10px] font-bold tracking-wide transition-colors duration-150 ${language === code ? 'bg-white/90 text-[#1B75E8] shadow-sm' : 'bg-[#F1F4F8]/75 text-[#64748B] group-hover:bg-white group-hover:text-[#1B75E8]'}`}>{code.toUpperCase()}</span>
+                      <span className="flex-1 text-sm font-medium transition-colors duration-150">{name}</span>
                       {language === code && <Check className="h-4 w-4 text-[#1B75E8]" aria-hidden="true" />}
                     </button>
                   ))}

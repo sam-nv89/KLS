@@ -232,7 +232,10 @@ export default function App() {
     if (resource.isFree) {
       trackEvent('download_free_click', resource.title);
     }
-    triggerResourcePdfDownload(resource);
+    // Keep generated worksheet text in its source language. The current PDF
+    // writer uses built-in ASCII fonts and cannot safely render localized text.
+    const sourceResource = resources.find((item) => item.id === resource.id) ?? resource;
+    triggerResourcePdfDownload(sourceResource);
     trackEvent('pdf_downloaded', resource.title);
     setDownloadedIds((prev) => new Set(prev).add(resource.id));
     setResources((prev) =>

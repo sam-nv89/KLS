@@ -30,6 +30,7 @@ import {
 import { SupportPage } from './pages/SupportPage';
 import { StudioAdminPage } from './pages/StudioAdminPage';
 import { localizeResource } from './data/localizedResources';
+import { localizeArticle } from './data/localizedEditorial';
 import { TRANSLATIONS } from './data/translations';
 
 function parsePathToRoute(pathname: string): AppRoute {
@@ -92,6 +93,10 @@ export default function App() {
   const [coffeeOpen, setCoffeeOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   const showToast = (msg: string) => {
     setToastMsg(msg);
     setTimeout(() => {
@@ -150,15 +155,16 @@ export default function App() {
     if (route.page === 'resource') {
       const item = resources.find((r) => r.slug === route.slug);
       if (item) {
+        const localizedItem = localizeResource(item, language);
         applySeoMetadata({
-          title: `${item.title} – Kids Learning Studio`,
-          description: item.shortDescription,
+          title: `${localizedItem.title} – Kids Learning Studio`,
+          description: localizedItem.shortDescription,
           canonicalPath: path,
           jsonLd: {
             '@context': 'https://schema.org',
             '@type': 'LearningResource',
-            name: item.title,
-            description: item.fullDescription,
+            name: localizedItem.title,
+            description: localizedItem.fullDescription,
             educationalLevel: `Preschool Ages ${item.ageGroup}`,
           },
         });
@@ -168,16 +174,17 @@ export default function App() {
     if (route.page === 'blog' && route.slug) {
       const article = BLOG_ARTICLES.find((a) => a.slug === route.slug);
       if (article) {
+        const localizedArticle = localizeArticle(article, language);
         applySeoMetadata({
-          title: `${article.title} – Kids Learning Studio`,
-          description: article.excerpt,
+          title: `${localizedArticle.title} – Kids Learning Studio`,
+          description: localizedArticle.excerpt,
           canonicalPath: path,
           jsonLd: {
             '@context': 'https://schema.org',
             '@type': 'BlogPosting',
-            headline: article.title,
-            description: article.excerpt,
-            author: { '@type': 'Person', name: article.author },
+            headline: localizedArticle.title,
+            description: localizedArticle.excerpt,
+            author: { '@type': 'Person', name: localizedArticle.author },
           },
         });
         return;
@@ -185,8 +192,8 @@ export default function App() {
     }
     if (route.page === 'faq') {
       applySeoMetadata({
-        title: 'FAQ – Kids Learning Studio',
-        description: 'Answers about free printable PDF worksheets, home and classroom printing, and digital bundles.',
+        title: language === 'ru' ? 'Вопросы и ответы – Kids Learning Studio' : language === 'es' ? 'Preguntas frecuentes – Kids Learning Studio' : 'FAQ – Kids Learning Studio',
+        description: language === 'ru' ? 'Ответы о бесплатных PDF-материалах, печати дома и в классе.' : language === 'es' ? 'Respuestas sobre fichas PDF gratuitas y su impresión en casa y en clase.' : 'Answers about free printable PDF worksheets and printing at home or in class.',
         canonicalPath: '/faq',
         jsonLd: {
           '@context': 'https://schema.org',
@@ -201,26 +208,24 @@ export default function App() {
       return;
     }
 
-    const titles: Record<string, string> = {
-      home: 'Kids Learning Studio – Printable Worksheets & Activities',
-      catalog: 'Free Printable Worksheets – Kids Learning Studio',
-      blog: 'Parent & Educator Blog – Kids Learning Studio',
-      about: 'About Us – Kids Learning Studio',
-      contact: 'Contact Us – Kids Learning Studio',
-      support: 'Buy Us a Coffee – Kids Learning Studio',
-      privacy: 'Privacy Policy – Kids Learning Studio',
-      cookies: 'Cookie Policy – Kids Learning Studio',
-      terms: 'Terms & Conditions – Kids Learning Studio',
-      'studio-admin': 'Studio Manager – Kids Learning Studio',
+    const titlesByLanguage: Record<Language, Record<string, string>> = {
+      en: {
+        home: 'Kids Learning Studio – Printable Worksheets & Activities', catalog: 'Free Printable Worksheets – Kids Learning Studio', blog: 'Parent & Educator Blog – Kids Learning Studio', about: 'About Us – Kids Learning Studio', contact: 'Contact Us – Kids Learning Studio', support: 'Support Kids Learning Studio', privacy: 'Privacy Policy – Kids Learning Studio', cookies: 'Cookie Policy – Kids Learning Studio', terms: 'Terms & Conditions – Kids Learning Studio', 'studio-admin': 'Studio Manager – Kids Learning Studio',
+      },
+      es: {
+        home: 'Kids Learning Studio – Fichas y actividades imprimibles', catalog: 'Fichas imprimibles gratis – Kids Learning Studio', blog: 'Blog para familias y docentes – Kids Learning Studio', about: 'Sobre nosotros – Kids Learning Studio', contact: 'Contacto – Kids Learning Studio', support: 'Apoya a Kids Learning Studio', privacy: 'Política de privacidad – Kids Learning Studio', cookies: 'Política de cookies – Kids Learning Studio', terms: 'Términos y condiciones – Kids Learning Studio', 'studio-admin': 'Administración – Kids Learning Studio',
+      },
+      ru: {
+        home: 'Kids Learning Studio – Рабочие листы и задания', catalog: 'Бесплатные материалы для печати – Kids Learning Studio', blog: 'Блог для родителей и педагогов – Kids Learning Studio', about: 'О проекте – Kids Learning Studio', contact: 'Связаться с нами – Kids Learning Studio', support: 'Поддержать Kids Learning Studio', privacy: 'Политика конфиденциальности – Kids Learning Studio', cookies: 'Политика cookie – Kids Learning Studio', terms: 'Условия использования – Kids Learning Studio', 'studio-admin': 'Управление студией – Kids Learning Studio',
+      },
     };
 
     applySeoMetadata({
-      title: titles[route.page] ?? titles.home,
-      description:
-        'Free and printable educational worksheets, coloring pages, math games, and activity packs for kids ages 2–6.',
+      title: titlesByLanguage[language][route.page] ?? titlesByLanguage[language].home,
+      description: language === 'ru' ? 'Бесплатные рабочие листы, раскраски, математические игры и задания для детей 2–6 лет.' : language === 'es' ? 'Fichas educativas, dibujos, juegos de matemáticas y actividades imprimibles gratis para niños de 2 a 6 años.' : 'Free printable worksheets, coloring pages, math games, and activity packs for children ages 2–6.',
       canonicalPath: path,
     });
-  }, [route, resources]);
+  }, [route, resources, language]);
 
   const handleDownloadResource = (resource: LearningResource) => {
     const t = TRANSLATIONS[language];

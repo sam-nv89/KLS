@@ -108,7 +108,7 @@ function buildWorksheetActivityStream(resource: LearningResource): string {
   }
 
   // Footer
-  lines.push('0.45 0.50 0.58 rg BT /F1 9 Tf 40 58 Td (Kids Learning Studio | Free for Home & Single Classroom Printing | kidslearningstudio.org) Tj ET');
+  lines.push('0.45 0.50 0.58 rg BT /F1 9 Tf 40 58 Td (Kids Learning Studio | Free for Home & Single Classroom Printing | klstudio.org) Tj ET');
 
   return lines.join('\n');
 }

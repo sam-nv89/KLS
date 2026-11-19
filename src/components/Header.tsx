@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, ShoppingBag, Menu, X, Globe, Coffee, ChevronDown, Check } from 'lucide-react';
+import { Search, Menu, X, Globe, Coffee, ChevronDown, Check } from 'lucide-react';
 import type { AppRoute, Language } from '../types/studio';
 import { TRANSLATIONS } from '../data/translations';
 import { BrandLogoMark } from './BrandLogo';
@@ -9,8 +9,6 @@ interface HeaderProps {
   onNavigate: (route: AppRoute) => void;
   language: Language;
   onChangeLanguage: (lang: Language) => void;
-  cartCount: number;
-  onOpenCart: () => void;
   onOpenCoffee: () => void;
 }
 
@@ -19,8 +17,6 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigate,
   language,
   onChangeLanguage,
-  cartCount,
-  onOpenCart,
   onOpenCoffee,
 }) => {
   const t = TRANSLATIONS[language];
@@ -47,11 +43,10 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const isNavActive = (check: string) => {
-    if (check === 'categories' && route.page === 'catalog' && route.preset !== 'free' && route.preset !== 'shop') {
+    if (check === 'categories' && route.page === 'catalog') {
       return true;
     }
     if (check === 'free' && route.page === 'catalog' && route.preset === 'free') return true;
-    if (check === 'shop' && route.page === 'catalog' && route.preset === 'shop') return true;
     if (check === 'blog' && route.page === 'blog') return true;
     if (check === 'about' && route.page === 'about') return true;
     return false;
@@ -94,17 +89,6 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               {t.nav.freeResources}
-            </button>
-            <button
-              type="button"
-              onClick={() => onNavigate({ page: 'catalog', preset: 'shop' })}
-              className={`whitespace-nowrap shrink-0 py-1 border-b-2 transition-colors cursor-pointer ${
-                isNavActive('shop')
-                  ? 'text-[#0F2A5F] border-[#1B75E8] font-semibold'
-                  : 'border-transparent hover:text-[#0F2A5F]'
-              }`}
-            >
-              {t.nav.shop}
             </button>
             <button
               type="button"
@@ -183,19 +167,6 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </div>
 
-            <button
-              type="button"
-              onClick={onOpenCart}
-              className="relative w-10 h-10 inline-flex items-center justify-center rounded-xl text-[#0F2A5F] hover:bg-[#F4F2EC] transition-colors cursor-pointer"
-              aria-label={`Shopping bag with ${cartCount} items`}
-            >
-              <ShoppingBag className="w-4.5 h-4.5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#1B75E8] text-white font-mono-num text-[11px] font-bold flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </button>
 
             <button
               type="button"
@@ -246,7 +217,6 @@ export const Header: React.FC<HeaderProps> = ({
             {[
               { label: t.nav.categories, route: { page: 'catalog', preset: 'all' } as AppRoute },
               { label: t.nav.freeResources, route: { page: 'catalog', preset: 'free' } as AppRoute },
-              { label: t.nav.shop, route: { page: 'catalog', preset: 'shop' } as AppRoute },
               { label: t.nav.blog, route: { page: 'blog' } as AppRoute },
               { label: t.nav.aboutUs, route: { page: 'about' } as AppRoute },
               { label: 'FAQ', route: { page: 'faq' } as AppRoute },

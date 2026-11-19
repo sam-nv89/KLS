@@ -17,7 +17,7 @@ import { AdSlot } from '../components/AdSlot';
 interface CatalogPageProps {
   language: Language;
   resources: LearningResource[];
-  initialPreset?: 'all' | 'free' | 'shop';
+  initialPreset?: 'all' | 'free';
   initialCategory?: CategoryId;
   initialQuery?: string;
   cartIds: Set<string>;
@@ -42,9 +42,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   onAddToCart,
 }) => {
   const t = TRANSLATIONS[language];
-  const [priceFilter, setPriceFilter] = useState<'all' | 'free' | 'premium'>(
-    initialPreset === 'free' ? 'free' : initialPreset === 'shop' ? 'premium' : 'all'
-  );
+  const [priceFilter, setPriceFilter] = useState<'all' | 'free'>(initialPreset === 'free' ? 'free' : 'all');
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>(initialCategory ?? 'all');
   const [selectedAge, setSelectedAge] = useState<AgeGroup | 'all'>('all');
   const [selectedTheme, setSelectedTheme] = useState<ResourceTheme | 'all'>('all');
@@ -58,7 +56,6 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
     return resources
       .filter((r) => {
         if (priceFilter === 'free' && !r.isFree) return false;
-        if (priceFilter === 'premium' && r.isFree) return false;
         if (selectedCategory !== 'all' && r.category !== selectedCategory) return false;
         if (selectedAge !== 'all' && r.ageGroup !== selectedAge && r.ageGroup !== '2-6') return false;
         if (selectedTheme !== 'all' && r.theme !== selectedTheme) return false;
@@ -87,16 +84,12 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
   const pageHeading =
     priceFilter === 'free'
       ? 'Free Printable Resources'
-      : priceFilter === 'premium'
-      ? 'Digital Activity Packs & Bundles'
       : 'Educational Resource Library';
 
   const pageSubtitle =
     priceFilter === 'free'
       ? 'Instant PDF downloads with zero sign-up required. Ready for home printers and preschool classrooms.'
-      : priceFilter === 'premium'
-      ? 'Complete multi-week workbooks, seasonal coloring books, and preschool learning binders.'
-      : 'Browse our complete collection of free printable worksheets and premium activity bundles for ages 2–6.';
+      : 'Browse our complete collection of free printable worksheets and activity packs for ages 2–6.';
 
   const firstRow = filtered.slice(0, 6);
   const restRows = filtered.slice(6);
@@ -119,12 +112,11 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
           {[
             { id: 'all', label: 'All Resources' },
             { id: 'free', label: 'Free PDFs' },
-            { id: 'premium', label: 'Digital Shop' },
           ].map((tab) => (
             <button
               key={tab.id}
               type="button"
-              onClick={() => setPriceFilter(tab.id as 'all' | 'free' | 'premium')}
+              onClick={() => setPriceFilter(tab.id as 'all' | 'free')}
               className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap cursor-pointer ${
                 priceFilter === tab.id
                   ? 'bg-white text-[#0F2A5F] shadow-sm'
@@ -241,11 +233,6 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
         <span>
           Showing <strong className="font-mono-num text-[#0F2A5F]">{filtered.length}</strong> printable resource{filtered.length === 1 ? '' : 's'}
         </span>
-        {priceFilter === 'premium' && (
-          <span className="text-[#1B75E8] font-semibold">
-            Tip: Use code STUDIO20 at checkout for 20% off bundles
-          </span>
-        )}
       </div>
 
       {/* Results Grid */}

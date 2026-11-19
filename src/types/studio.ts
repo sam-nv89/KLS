@@ -74,34 +74,6 @@ export interface LearningResource {
   previewVariant: PreviewVariant;
 }
 
-export interface CartItem {
-  resourceId: string;
-  quantity: number;
-}
-
-export interface DigitalOrder {
-  id: string;
-  customerName: string;
-  customerEmail: string;
-  items: {
-    resourceId: string;
-    title: string;
-    price: number;
-  }[];
-  promoCode?: string;
-  discountAmount: number;
-  totalPaid: number;
-  createdAt: string;
-  downloadToken: string;
-}
-
-export interface PromoCode {
-  code: string;
-  discountPercent: number;
-  description: string;
-  active: boolean;
-}
-
 export interface BlogArticle {
   id: string;
   slug: string;
@@ -118,7 +90,7 @@ export interface BlogArticle {
 export interface FaqItem {
   question: string;
   answer: string;
-  category: 'Printing' | 'Downloads' | 'Shop & Licenses' | 'Support';
+  category: 'Printing' | 'Downloads' | 'Support';
 }
 
 export interface AdZoneConfig {
@@ -136,8 +108,6 @@ export interface AnalyticsEvent {
     | 'resource_view'
     | 'download_free_click'
     | 'pdf_downloaded'
-    | 'buy_now_click'
-    | 'purchase_completed'
     | 'newsletter_subscribed'
     | 'support_visit'
     | 'donation_completed';
@@ -148,16 +118,14 @@ export interface AnalyticsEvent {
 
 export type AppRoute =
   | { page: 'home' }
-  | { page: 'catalog'; preset?: 'all' | 'free' | 'shop'; category?: CategoryId; query?: string }
+  | { page: 'catalog'; preset?: 'all' | 'free'; category?: CategoryId; query?: string }
   | { page: 'resource'; slug: string }
   | { page: 'blog'; slug?: string }
   | { page: 'about' }
   | { page: 'contact' }
   | { page: 'faq' }
   | { page: 'support' }
-  | { page: 'downloads' }
   | { page: 'privacy' }
   | { page: 'cookies' }
   | { page: 'terms' }
-  | { page: 'refunds' }
   | { page: 'studio-admin' };

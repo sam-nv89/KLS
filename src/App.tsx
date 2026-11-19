@@ -1,24 +1,20 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import type {
   AdZoneConfig,
   AnalyticsEvent,
   AppRoute,
-  CartItem,
   CategoryId,
-  DigitalOrder,
   Language,
   LearningResource,
-  PromoCode,
 } from './types/studio';
 import { INITIAL_RESOURCES } from './data/resources';
-import { BLOG_ARTICLES, FAQ_ITEMS, INITIAL_AD_ZONES, INITIAL_PROMO_CODES } from './data/editorial';
+import { BLOG_ARTICLES, FAQ_ITEMS, INITIAL_AD_ZONES } from './data/editorial';
 import { triggerResourcePdfDownload } from './utils/pdfGenerator';
 import { applySeoMetadata } from './utils/seo';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { AdSlot } from './components/AdSlot';
-import { CartDrawer } from './components/CartDrawer';
 import { CoffeeModal } from './components/CoffeeModal';
 import { CookieNotice } from './components/CookieNotice';
 import { HomePage } from './pages/HomePage';
@@ -30,16 +26,14 @@ import {
   ContactUsPage,
   FaqPage,
   LegalPage,
-  MyDownloadsPage,
-  SupportPage,
 } from './pages/StaticPages';
+import { SupportPage } from './pages/SupportPage';
 import { StudioAdminPage } from './pages/StudioAdminPage';
 
 function parsePathToRoute(pathname: string): AppRoute {
   const clean = pathname.replace(/\/+$/, '') || '/';
   if (clean === '/') return { page: 'home' };
   if (clean === '/free-resources') return { page: 'catalog', preset: 'free' };
-  if (clean === '/shop') return { page: 'catalog', preset: 'shop' };
   if (clean === '/resources') return { page: 'catalog', preset: 'all' };
   if (clean.startsWith('/resources/')) {
     const slug = clean.replace('/resources/', '');
@@ -53,11 +47,9 @@ function parsePathToRoute(pathname: string): AppRoute {
   if (clean === '/contact') return { page: 'contact' };
   if (clean === '/faq') return { page: 'faq' };
   if (clean === '/support') return { page: 'support' };
-  if (clean === '/downloads') return { page: 'downloads' };
   if (clean === '/privacy') return { page: 'privacy' };
   if (clean === '/cookies') return { page: 'cookies' };
   if (clean === '/terms') return { page: 'terms' };
-  if (clean === '/refunds') return { page: 'refunds' };
   if (clean === '/studio-admin') return { page: 'studio-admin' };
   return { page: 'home' };
 }
@@ -68,7 +60,6 @@ function routeToPath(route: AppRoute): string {
       return '/';
     case 'catalog':
       if (route.preset === 'free') return '/free-resources';
-      if (route.preset === 'shop') return '/shop';
       return '/resources';
     case 'resource':
       return `/resources/${route.slug}`;
@@ -92,28 +83,10 @@ export default function App() {
   });
 
   const [resources, setResources] = useState<LearningResource[]>(INITIAL_RESOURCES);
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    try {
-      const raw = localStorage.getItem('kls_cart');
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  });
-  const [orders, setOrders] = useState<DigitalOrder[]>(() => {
-    try {
-      const raw = localStorage.getItem('kls_orders');
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  });
   const [downloadedIds, setDownloadedIds] = useState<Set<string>>(new Set());
   const [adZones, setAdZones] = useState<AdZoneConfig[]>(INITIAL_AD_ZONES);
-  const [promoCodes, setPromoCodes] = useState<PromoCode[]>(INITIAL_PROMO_CODES);
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
 
-  const [cartOpen, setCartOpen] = useState(false);
   const [coffeeOpen, setCoffeeOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
@@ -136,22 +109,6 @@ export default function App() {
       ...prev,
     ]);
   };
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('kls_cart', JSON.stringify(cart));
-    } catch {
-      // ignore
-    }
-  }, [cart]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('kls_orders', JSON.stringify(orders));
-    } catch {
-      // ignore
-    }
-  }, [orders]);
 
   useEffect(() => {
     try {
@@ -197,16 +154,10 @@ export default function App() {
           canonicalPath: path,
           jsonLd: {
             '@context': 'https://schema.org',
-            '@type': item.isFree ? 'LearningResource' : 'Product',
+            '@type': 'LearningResource',
             name: item.title,
             description: item.fullDescription,
             educationalLevel: `Preschool Ages ${item.ageGroup}`,
-            offers: {
-              '@type': 'Offer',
-              price: item.price.toFixed(2),
-              priceCurrency: 'USD',
-              availability: 'https://schema.org/InStock',
-            },
           },
         });
         return;
@@ -250,16 +201,14 @@ export default function App() {
 
     const titles: Record<string, string> = {
       home: 'Kids Learning Studio – Printable Worksheets & Activities',
-      catalog: 'Printable Worksheets & Digital Shop – Kids Learning Studio',
+      catalog: 'Free Printable Worksheets – Kids Learning Studio',
       blog: 'Parent & Educator Blog – Kids Learning Studio',
       about: 'About Us – Kids Learning Studio',
       contact: 'Contact Us – Kids Learning Studio',
       support: 'Buy Us a Coffee – Kids Learning Studio',
-      downloads: 'My Downloads – Kids Learning Studio',
       privacy: 'Privacy Policy – Kids Learning Studio',
       cookies: 'Cookie Policy – Kids Learning Studio',
       terms: 'Terms & Conditions – Kids Learning Studio',
-      refunds: 'Refund Policy – Kids Learning Studio',
       'studio-admin': 'Studio Manager – Kids Learning Studio',
     };
 
@@ -270,17 +219,6 @@ export default function App() {
       canonicalPath: path,
     });
   }, [route, resources]);
-
-  const cartIds = useMemo(() => new Set(cart.map((c) => c.resourceId)), [cart]);
-  const purchasedIds = useMemo(() => {
-    const ids = new Set<string>();
-    for (const o of orders) {
-      for (const item of o.items) {
-        ids.add(item.resourceId);
-      }
-    }
-    return ids;
-  }, [orders]);
 
   const handleDownloadResource = (resource: LearningResource) => {
     if (resource.isFree) {
@@ -295,42 +233,29 @@ export default function App() {
     showToast(`Downloaded ${resource.slug}-kids-learning-studio.pdf`);
   };
 
-  const handleAddToCart = (resource: LearningResource) => {
-    if (resource.isFree) {
-      handleDownloadResource(resource);
-      return;
+  const cartIds = new Set<string>();
+  const purchasedIds = new Set<string>();
+
+  const handleSubscribeNewsletter = async (email: string): Promise<boolean> => {
+    const wp = window as Window & { klsConfig?: { restUrl: string; nonce: string } };
+    if (!wp.klsConfig?.restUrl || !wp.klsConfig.nonce) {
+      showToast('Newsletter is not connected to WordPress yet.');
+      return false;
     }
-    setCart((prev) => {
-      if (prev.some((c) => c.resourceId === resource.id)) return prev;
-      return [...prev, { resourceId: resource.id, quantity: 1 }];
-    });
-    trackEvent('buy_now_click', resource.title, resource.price);
-    showToast(`Added "${resource.title}" to your bag`);
-  };
-
-  const handleBuyNow = (resource: LearningResource) => {
-    handleAddToCart(resource);
-    setCartOpen(true);
-  };
-
-  const handleRemoveFromCart = (resourceId: string) => {
-    setCart((prev) => prev.filter((c) => c.resourceId !== resourceId));
-  };
-
-  const handleCheckoutComplete = (order: DigitalOrder) => {
-    setOrders((prev) => [order, ...prev]);
-    setCart([]);
-    trackEvent('purchase_completed', `Order #${order.id}`, order.totalPaid);
-  };
-
-  const handleSubscribeNewsletter = (email: string) => {
-    trackEvent('newsletter_subscribed', email);
-    showToast('Subscribed! Weekly free printables are on the way.');
-  };
-
-  const handleDonateComplete = (amount: number, note: string) => {
-    trackEvent('donation_completed', note || 'Coffee Supporter', amount);
-    showToast(`Thank you for your $${amount.toFixed(2)} coffee support!`);
+    try {
+      const response = await fetch(`${wp.klsConfig.restUrl}kls/v1/newsletter`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': wp.klsConfig.nonce },
+        body: JSON.stringify({ email }),
+      });
+      if (!response.ok) throw new Error('Subscription failed');
+      trackEvent('newsletter_subscribed', email);
+      showToast('Subscribed! Thank you for joining.');
+      return true;
+    } catch {
+      showToast('Could not subscribe right now. Please try again later.');
+      return false;
+    }
   };
 
   const headerAdZone = adZones.find((z) => z.id === 'ad-header-banner');
@@ -347,7 +272,7 @@ export default function App() {
             adZones={adZones}
             onNavigate={navigate}
             onDownloadFree={handleDownloadResource}
-            onAddToCart={handleAddToCart}
+            onAddToCart={handleDownloadResource}
             onSubscribeNewsletter={handleSubscribeNewsletter}
             onOpenCoffee={() => {
               trackEvent('support_visit', 'Coffee Modal');
@@ -369,7 +294,7 @@ export default function App() {
             adZones={adZones}
             onNavigate={navigate}
             onDownloadFree={handleDownloadResource}
-            onAddToCart={handleAddToCart}
+            onAddToCart={handleDownloadResource}
           />
         );
       case 'resource': {
@@ -403,8 +328,8 @@ export default function App() {
             adZones={adZones}
             onNavigate={navigate}
             onDownloadFree={handleDownloadResource}
-            onAddToCart={handleAddToCart}
-            onBuyNow={handleBuyNow}
+            onAddToCart={handleDownloadResource}
+            onBuyNow={handleDownloadResource}
             onSubscribeNewsletter={handleSubscribeNewsletter}
             onOpenCoffee={() => {
               trackEvent('support_visit', 'Resource Page Coffee');
@@ -429,27 +354,16 @@ export default function App() {
       case 'faq':
         return <FaqPage />;
       case 'support':
-        return <SupportPage onDonateComplete={handleDonateComplete} />;
-      case 'downloads':
-        return (
-          <MyDownloadsPage
-            orders={orders}
-            resources={resources}
-            onDownloadResource={handleDownloadResource}
-            onNavigate={navigate}
-          />
-        );
+        return <SupportPage />;
       case 'privacy':
       case 'cookies':
       case 'terms':
-      case 'refunds':
         return <LegalPage type={route.page} />;
       case 'studio-admin':
         return (
           <StudioAdminPage
             resources={resources}
             adZones={adZones}
-            promoCodes={promoCodes}
             events={events}
             onToggleAdZone={(id) =>
               setAdZones((prev) =>
@@ -460,15 +374,6 @@ export default function App() {
                 )
               )
             }
-            onUpdateResourcePrice={(id, price) =>
-              setResources((prev) => prev.map((r) => (r.id === id ? { ...r, price } : r)))
-            }
-            onTogglePromoCode={(code) =>
-              setPromoCodes((prev) =>
-                prev.map((p) => (p.code === code ? { ...p, active: !p.active } : p))
-              )
-            }
-            onAddPromoCode={(promo) => setPromoCodes((prev) => [promo, ...prev])}
           />
         );
       default:
@@ -483,8 +388,6 @@ export default function App() {
         onNavigate={navigate}
         language={language}
         onChangeLanguage={setLanguage}
-        cartCount={cart.length}
-        onOpenCart={() => setCartOpen(true)}
         onOpenCoffee={() => {
           trackEvent('support_visit', 'Header Coffee');
           setCoffeeOpen(true);
@@ -507,22 +410,9 @@ export default function App() {
         }}
       />
 
-      <CartDrawer
-        isOpen={cartOpen}
-        onClose={() => setCartOpen(false)}
-        cart={cart}
-        resources={resources}
-        promoCodes={promoCodes}
-        onRemoveItem={handleRemoveFromCart}
-        onCheckoutComplete={handleCheckoutComplete}
-        onDownloadResource={handleDownloadResource}
-        onBrowseShop={() => navigate({ page: 'catalog', preset: 'shop' })}
-      />
-
       <CoffeeModal
         isOpen={coffeeOpen}
         onClose={() => setCoffeeOpen(false)}
-        onDonateComplete={handleDonateComplete}
       />
 
       <CookieNotice onNavigate={navigate} />

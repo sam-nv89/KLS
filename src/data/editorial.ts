@@ -1,4 +1,4 @@
-import type { AdZoneConfig, BlogArticle, FaqItem, PromoCode } from '../types/studio';
+import type { AdZoneConfig, BlogArticle, FaqItem } from '../types/studio';
 
 export const BLOG_ARTICLES: BlogArticle[] = [
   {
@@ -59,7 +59,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: 'Downloads',
     question: 'Do I need to create an account to download free worksheets?',
     answer:
-      'No. All free resources on Kids Learning Studio download directly as instant PDFs with zero registration wall. We only ask for your email if you voluntarily choose to join our weekly printable newsletter or purchase a paid digital bundle.',
+      'No. All free resources download directly as instant PDFs. An email address is only needed if you choose to subscribe to the newsletter.',
   },
   {
     category: 'Printing',
@@ -74,37 +74,16 @@ export const FAQ_ITEMS: FaqItem[] = [
       'Yes! We design our layouts with high-contrast lines and plenty of white space so every math, alphabet, puzzle, and coloring page prints cleanly in standard grayscale/black-and-white mode.',
   },
   {
-    category: 'Shop & Licenses',
+    category: 'Downloads',
     question: 'Can preschool teachers use these printables in their classrooms?',
     answer:
-      'Yes. Both our free and paid resources include a personal & single-classroom license, meaning parents can print for their family and teachers can print unlimited copies for their own classroom students.',
-  },
-  {
-    category: 'Shop & Licenses',
-    question: 'How do I receive paid activity packs and can I re-download them later?',
-    answer:
-      'Immediately after checkout, your secure download links appear on your confirmation screen and in your "My Downloads" order library, along with an email receipt so you can re-download your files anytime.',
+      'Yes. Our resources are for personal family use and for educators in their own classrooms.',
   },
   {
     category: 'Support',
     question: 'How does "Buy Us a Coffee" support Kids Learning Studio?',
     answer:
       'Because most of our library is completely free without mandatory paywalls, voluntary coffees help cover illustration, curriculum design, and hosting costs so we can publish new free resources every week.',
-  },
-];
-
-export const INITIAL_PROMO_CODES: PromoCode[] = [
-  {
-    code: 'STUDIO20',
-    discountPercent: 20,
-    description: '20% off any digital activity pack or preschool bundle',
-    active: true,
-  },
-  {
-    code: 'TEACHER10',
-    discountPercent: 10,
-    description: '10% educator appreciation discount',
-    active: true,
   },
 ];
 

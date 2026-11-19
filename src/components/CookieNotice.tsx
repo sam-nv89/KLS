@@ -32,7 +32,7 @@ export const CookieNotice: React.FC<CookieNoticeProps> = ({ onNavigate }) => {
       className="fixed bottom-4 left-4 right-4 sm:right-auto sm:max-w-sm z-30 rounded-2xl bg-white border border-[#E5E2D9] shadow-lg p-4 flex flex-col gap-3"
     >
       <p className="text-xs text-[#475569] leading-relaxed">
-        We use essential storage for your shopping bag and downloads. Read our{' '}
+        We use essential storage for language and site preferences. Read our{' '}
         <button
           type="button"
           onClick={() => onNavigate({ page: 'cookies' })}

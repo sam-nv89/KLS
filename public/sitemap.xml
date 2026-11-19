@@ -3,7 +3,6 @@
   <url><loc>/</loc><priority>1.0</priority></url>
   <url><loc>/free-resources</loc><priority>0.9</priority></url>
   <url><loc>/resources</loc><priority>0.9</priority></url>
-  <url><loc>/shop</loc><priority>0.8</priority></url>
   <url><loc>/resources/friendly-dinosaur-coloring-pages</loc><priority>0.8</priority></url>
   <url><loc>/resources/count-and-trace-numbers-1-10</loc><priority>0.8</priority></url>
   <url><loc>/resources/uppercase-alphabet-tracing-cards</loc><priority>0.8</priority></url>
@@ -13,9 +12,6 @@
   <url><loc>/resources/space-explorers-coloring-book</loc><priority>0.8</priority></url>
   <url><loc>/resources/cut-and-paste-rainbow-weather-craft</loc><priority>0.8</priority></url>
   <url><loc>/resources/gentle-animal-mazes-ages-4-6</loc><priority>0.8</priority></url>
-  <url><loc>/resources/complete-preschool-learning-binder-bundle</loc><priority>0.8</priority></url>
-  <url><loc>/resources/phonics-and-letter-sounds-activity-pack</loc><priority>0.8</priority></url>
-  <url><loc>/resources/playful-kindergarten-math-and-addition-pack</loc><priority>0.8</priority></url>
   <url><loc>/blog</loc><priority>0.7</priority></url>
   <url><loc>/about</loc><priority>0.6</priority></url>
   <url><loc>/faq</loc><priority>0.6</priority></url>

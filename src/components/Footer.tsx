@@ -1,5 +1,5 @@
 import React from 'react';
-import { Coffee, Download, Mail, Settings } from 'lucide-react';
+import { Coffee } from 'lucide-react';
 import type { AppRoute, Language } from '../types/studio';
 import { CATEGORIES } from '../data/resources';
 import { TRANSLATIONS } from '../data/translations';
@@ -39,14 +39,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, onOpenCoff
                 <Coffee className="w-3.5 h-3.5" />
                 <span>{t.sections.buyCoffeeBtn}</span>
               </button>
-              <button
-                type="button"
-                onClick={() => onNavigate({ page: 'contact' })}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium bg-white/10 text-white hover:bg-white/20 transition-colors cursor-pointer"
-              >
-                <Mail className="w-3.5 h-3.5" />
-                <span>hello@kidslearningstudio.org</span>
-              </button>
             </div>
           </div>
 
@@ -57,16 +49,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, onOpenCoff
               <li>
                 <button type="button" onClick={() => onNavigate({ page: 'catalog', preset: 'free' })} className="hover:text-white transition-colors cursor-pointer">
                   {t.nav.freeResources}
-                </button>
-              </li>
-              <li>
-                <button type="button" onClick={() => onNavigate({ page: 'catalog', preset: 'shop' })} className="hover:text-white transition-colors cursor-pointer">
-                  {t.nav.shop}
-                </button>
-              </li>
-              <li>
-                <button type="button" onClick={() => onNavigate({ page: 'downloads' })} className="hover:text-white transition-colors cursor-pointer">
-                  My Downloads
                 </button>
               </li>
               <li>
@@ -129,43 +111,19 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, onOpenCoff
                   Terms &amp; Conditions
                 </button>
               </li>
-              <li>
-                <button type="button" onClick={() => onNavigate({ page: 'refunds' })} className="hover:text-white transition-colors cursor-pointer">
-                  Refund Policy
-                </button>
-              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#94A3B8]">
+        <div className="mt-12 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
           <p>{t.footer.copyright}</p>
-          <div className="flex flex-wrap items-center gap-4">
-            <a href="#pinterest" onClick={(e) => { e.preventDefault(); onNavigate({ page: 'catalog', preset: 'free' }); }} className="hover:text-white transition-colors">
+          <div className="flex items-center justify-center gap-3">
+            <a href="https://www.pinterest.com/KidsLearningStudio/" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 min-w-28 items-center justify-center rounded-full border border-white/20 px-4 font-semibold text-white/80 transition-colors hover:border-white/50 hover:bg-white/10 hover:text-white">
               Pinterest
             </a>
-            <a href="#instagram" onClick={(e) => { e.preventDefault(); onNavigate({ page: 'catalog', preset: 'all' }); }} className="hover:text-white transition-colors">
-              Instagram
+            <a href="https://t.me/KidsLearningStudio" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 min-w-28 items-center justify-center rounded-full border border-white/20 px-4 font-semibold text-white/80 transition-colors hover:border-white/50 hover:bg-white/10 hover:text-white">
+              Telegram
             </a>
-            <a href="#youtube" onClick={(e) => { e.preventDefault(); onNavigate({ page: 'blog' }); }} className="hover:text-white transition-colors">
-              YouTube
-            </a>
-            <a
-              href="/kids-learning-studio-theme.zip"
-              download="kids-learning-studio-theme.zip"
-              className="inline-flex items-center gap-1 text-[#F5B700] hover:text-white transition-colors"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>WP Theme (.zip)</span>
-            </a>
-            <button
-              type="button"
-              onClick={() => onNavigate({ page: 'studio-admin' })}
-              className="inline-flex items-center gap-1 text-[#CBD5E1] hover:text-white transition-colors cursor-pointer"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span>Studio Manager &amp; WP Blueprint</span>
-            </button>
           </div>
         </div>
       </div>

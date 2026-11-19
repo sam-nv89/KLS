@@ -29,7 +29,7 @@ interface ResourceDetailPageProps {
   onDownloadFree: (resource: LearningResource) => void;
   onAddToCart: (resource: LearningResource) => void;
   onBuyNow: (resource: LearningResource) => void;
-  onSubscribeNewsletter: (email: string) => void;
+  onSubscribeNewsletter: (email: string) => Promise<boolean>;
   onOpenCoffee: () => void;
 }
 
@@ -59,12 +59,13 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
     .slice(0, 3);
   const belowAdZone = adZones.find((z) => z.id === 'ad-below-resource');
 
-  const handleOptionalSubscribe = (e: React.FormEvent) => {
+  const handleOptionalSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!optInEmail.includes('@')) return;
-    onSubscribeNewsletter(optInEmail.trim());
-    setOptInDone(true);
-    setOptInEmail('');
+    if (await onSubscribeNewsletter(optInEmail.trim())) {
+      setOptInDone(true);
+      setOptInEmail('');
+    }
   };
 
   return (

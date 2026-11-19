@@ -17,7 +17,7 @@ interface HomePageProps {
   onNavigate: (route: AppRoute) => void;
   onDownloadFree: (resource: LearningResource) => void;
   onAddToCart: (resource: LearningResource) => void;
-  onSubscribeNewsletter: (email: string) => void;
+  onSubscribeNewsletter: (email: string) => Promise<boolean>;
   onOpenCoffee: () => void;
 }
 
@@ -41,12 +41,13 @@ export const HomePage: React.FC<HomePageProps> = ({
   const featuredResources = resources.filter((r) => r.featured).slice(0, 3);
   const homeAdZone = adZones.find((z) => z.id === 'ad-home-content');
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.includes('@')) return;
-    onSubscribeNewsletter(email.trim());
-    setSubscribed(true);
-    setEmail('');
+    if (await onSubscribeNewsletter(email.trim())) {
+      setSubscribed(true);
+      setEmail('');
+    }
   };
 
   const whyIcons = [Smile, Printer, Sparkles, Puzzle];
@@ -191,10 +192,10 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
           <button
             type="button"
-            onClick={() => onNavigate({ page: 'catalog', preset: 'shop' })}
+            onClick={() => onNavigate({ page: 'catalog', preset: 'all' })}
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1B75E8] hover:text-[#155EC0] transition-colors cursor-pointer whitespace-nowrap shrink-0"
           >
-            <span>{t.sections.viewShop}</span>
+            <span>{t.sections.viewAllFree}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>

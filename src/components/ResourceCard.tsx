@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, ShoppingBag, ArrowRight, Check } from 'lucide-react';
+import { Download, Check } from 'lucide-react';
 import type { LearningResource } from '../types/studio';
 import { CATEGORIES } from '../data/resources';
 import { WorksheetPreview } from './WorksheetPreview';
@@ -8,7 +8,7 @@ interface ResourceCardProps {
   resource: LearningResource;
   onOpenResource: (slug: string) => void;
   onDownloadFree: (resource: LearningResource) => void;
-  onAddToCart: (resource: LearningResource) => void;
+  onAddToCart?: (resource: LearningResource) => void;
   isInCart?: boolean;
   isDownloaded?: boolean;
   labels?: {
@@ -22,8 +22,8 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   resource,
   onOpenResource,
   onDownloadFree,
-  onAddToCart,
-  isInCart = false,
+  onAddToCart: _onAddToCart,
+  isInCart: _isInCart = false,
   isDownloaded = false,
   labels = {
     downloadFree: 'Download Free',
@@ -73,9 +73,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         </p>
 
         <div className="mt-5 pt-4 border-t border-[#F1EFE9] flex items-center justify-between gap-3">
-          {resource.isFree ? (
-            <>
-              <span className="text-sm font-semibold text-[#15803D] whitespace-nowrap">
+          <span className="text-sm font-semibold text-[#15803D] whitespace-nowrap">
                 {labels.freeLabel}
               </span>
               <button
@@ -86,43 +84,6 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
                 {isDownloaded ? <Check className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
                 <span>{isDownloaded ? 'Downloaded' : labels.downloadFree}</span>
               </button>
-            </>
-          ) : (
-            <>
-              <div className="flex items-baseline gap-2 whitespace-nowrap">
-                <span className="font-mono-num text-base font-bold text-[#0F2A5F]">
-                  ${resource.price.toFixed(2)}
-                </span>
-                {resource.compareAtPrice && (
-                  <span className="font-mono-num text-xs text-[#94A3B8] line-through">
-                    ${resource.compareAtPrice.toFixed(2)}
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => onOpenResource(resource.slug)}
-                  className="p-2 rounded-xl text-[#475569] hover:text-[#0F2A5F] hover:bg-[#F4F2EC] transition-colors cursor-pointer"
-                  aria-label={`View details for ${resource.title}`}
-                >
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onAddToCart(resource)}
-                  className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                    isInCart
-                      ? 'bg-[#16A34A] text-white hover:bg-[#15803D]'
-                      : 'bg-[#0F2A5F] text-white hover:bg-[#1B3B7B]'
-                  }`}
-                >
-                  {isInCart ? <Check className="w-3.5 h-3.5" /> : <ShoppingBag className="w-3.5 h-3.5" />}
-                  <span>{isInCart ? 'In Bag' : labels.addToCart}</span>
-                </button>
-              </div>
-            </>
-          )}
         </div>
       </div>
     </article>

@@ -144,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <ChevronDown className={`h-3.5 w-3.5 text-[#64748B] transition-transform duration-200 ${languageMenuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
               </button>
               {languageMenuOpen && (
-                <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-44 origin-top-right rounded-2xl border border-[#E5EAF2] bg-white p-1.5 shadow-[0_16px_40px_-16px_rgba(15,42,95,0.32)] ring-1 ring-black/[0.03] animate-in fade-in slide-in-from-top-1 duration-150" role="listbox" aria-label={t.ui.languageLabel}>
+                <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-48 origin-top-right rounded-2xl border border-white/80 bg-white/75 p-1.5 shadow-[0_20px_50px_-18px_rgba(15,42,95,0.38)] ring-1 ring-[#0F2A5F]/[0.06] backdrop-blur-xl animate-in fade-in slide-in-from-top-1 duration-150" role="listbox" aria-label={t.ui.languageLabel}>
                   {([
                     { code: 'en', name: 'English' },
                     { code: 'es', name: 'Español' },
@@ -156,9 +156,9 @@ export const Header: React.FC<HeaderProps> = ({
                       role="option"
                       aria-selected={language === code}
                       onClick={() => { onChangeLanguage(code); setLanguageMenuOpen(false); }}
-                      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors ${language === code ? 'bg-[#EEF5FF] text-[#125FC4]' : 'text-[#334155] hover:bg-[#F6F8FB]'}`}
+                      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-150 ${language === code ? 'bg-[#EEF5FF]/85 text-[#125FC4] shadow-sm shadow-blue-900/[0.04]' : 'text-[#334155] hover:bg-white/65'}`}
                     >
-                      <span className={`flex h-7 w-8 items-center justify-center rounded-lg text-[10px] font-bold tracking-wide ${language === code ? 'bg-white text-[#1B75E8] shadow-sm' : 'bg-[#F1F4F8] text-[#64748B]'}`}>{code.toUpperCase()}</span>
+                      <span className={`flex h-7 w-8 items-center justify-center rounded-lg text-[10px] font-bold tracking-wide ${language === code ? 'bg-white/90 text-[#1B75E8] shadow-sm' : 'bg-[#F1F4F8]/75 text-[#64748B]'}`}>{code.toUpperCase()}</span>
                       <span className="flex-1 text-sm font-medium">{name}</span>
                       {language === code && <Check className="h-4 w-4 text-[#1B75E8]" aria-hidden="true" />}
                     </button>

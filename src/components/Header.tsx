@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, ShoppingBag, Menu, X, Globe, Coffee } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Search, ShoppingBag, Menu, X, Globe, Coffee, ChevronDown, Check } from 'lucide-react';
 import type { AppRoute, Language } from '../types/studio';
 import { TRANSLATIONS } from '../data/translations';
 import { BrandLogoMark } from './BrandLogo';
@@ -27,6 +27,17 @@ export const Header: React.FC<HeaderProps> = ({
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
+  const languageMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!languageMenuOpen) return;
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (!languageMenuRef.current?.contains(event.target as Node)) setLanguageMenuOpen(false);
+    };
+    document.addEventListener('mousedown', closeOnOutsideClick);
+    return () => document.removeEventListener('mousedown', closeOnOutsideClick);
+  }, [languageMenuOpen]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,18 +142,45 @@ export const Header: React.FC<HeaderProps> = ({
               <Search className="w-4.5 h-4.5" />
             </button>
 
-            <div className="hidden sm:flex items-center rounded-xl border border-[#E5E2D9] bg-white px-2 h-10">
-              <Globe className="w-3.5 h-3.5 text-[#64748B] mr-1.5" aria-hidden="true" />
-              <select
+            <div className="hidden sm:block relative" ref={languageMenuRef}>
+              <button
+                type="button"
                 aria-label="Select language"
-                value={language}
-                onChange={(e) => onChangeLanguage(e.target.value as Language)}
-                className="text-xs font-semibold text-[#0F2A5F] bg-transparent focus:outline-none cursor-pointer pr-1"
+                aria-haspopup="listbox"
+                aria-expanded={languageMenuOpen}
+                onClick={() => setLanguageMenuOpen((open) => !open)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Escape') setLanguageMenuOpen(false);
+                  if (event.key === 'ArrowDown') { event.preventDefault(); setLanguageMenuOpen(true); }
+                }}
+                className={`group inline-flex h-10 items-center gap-2 rounded-full border bg-white px-3 text-xs font-semibold text-[#0F2A5F] shadow-sm transition-all duration-200 hover:border-[#B9D4FA] hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B75E8]/30 ${languageMenuOpen ? 'border-[#9CC5FA] shadow-md shadow-blue-900/10' : 'border-[#E5E2D9]'}`}
               >
-                <option value="en">EN</option>
-                <option value="es">ES</option>
-                <option value="ru">RU</option>
-              </select>
+                <Globe className="h-4 w-4 text-[#64748B] transition-colors group-hover:text-[#1B75E8]" aria-hidden="true" />
+                <span>{language.toUpperCase()}</span>
+                <ChevronDown className={`h-3.5 w-3.5 text-[#64748B] transition-transform duration-200 ${languageMenuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </button>
+              {languageMenuOpen && (
+                <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-44 origin-top-right rounded-2xl border border-[#E5EAF2] bg-white p-1.5 shadow-[0_16px_40px_-16px_rgba(15,42,95,0.32)] ring-1 ring-black/[0.03] animate-in fade-in slide-in-from-top-1 duration-150" role="listbox" aria-label="Select language">
+                  {([
+                    { code: 'en', name: 'English' },
+                    { code: 'es', name: 'Español' },
+                    { code: 'ru', name: 'Русский' },
+                  ] as { code: Language; name: string }[]).map(({ code, name }) => (
+                    <button
+                      key={code}
+                      type="button"
+                      role="option"
+                      aria-selected={language === code}
+                      onClick={() => { onChangeLanguage(code); setLanguageMenuOpen(false); }}
+                      className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors ${language === code ? 'bg-[#EEF5FF] text-[#125FC4]' : 'text-[#334155] hover:bg-[#F6F8FB]'}`}
+                    >
+                      <span className={`flex h-7 w-8 items-center justify-center rounded-lg text-[10px] font-bold tracking-wide ${language === code ? 'bg-white text-[#1B75E8] shadow-sm' : 'bg-[#F1F4F8] text-[#64748B]'}`}>{code.toUpperCase()}</span>
+                      <span className="flex-1 text-sm font-medium">{name}</span>
+                      {language === code && <Check className="h-4 w-4 text-[#1B75E8]" aria-hidden="true" />}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <button

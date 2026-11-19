@@ -174,6 +174,8 @@ const RESOURCE_TRANSLATIONS: Record<Exclude<Language, 'en'>, Record<string, Loca
 };
 
 export function localizeResource(resource: LearningResource, language: Language): LearningResource {
+  const cmsTranslation = resource.translations?.[language];
+  if (cmsTranslation) return { ...resource, ...cmsTranslation };
   if (language === 'en') return resource;
   const translation = RESOURCE_TRANSLATIONS[language][resource.id];
   return translation ? { ...resource, ...translation } : resource;

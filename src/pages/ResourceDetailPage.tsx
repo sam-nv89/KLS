@@ -91,12 +91,18 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
         {/* Left: Large Interactive Multi-Page PDF Previewer */}
         <div className="lg:col-span-7 space-y-4">
           <div className="rounded-3xl overflow-hidden border border-[#E5E2D9] bg-white shadow-sm">
-            <WorksheetPreview
-              variant={resource.previewVariant}
-              language={language}
-              title={resource.title}
-              pageIndex={activePageIndex}
-            />
+            {resource.thumbnailUrl && activePageIndex === 0 ? (
+              <div className="aspect-[4/3] bg-[#F4F2EC]">
+                <img src={resource.thumbnailUrl} alt={resource.title} className="w-full h-full object-contain" />
+              </div>
+            ) : (
+              <WorksheetPreview
+                variant={resource.previewVariant}
+                language={language}
+                title={resource.title}
+                pageIndex={activePageIndex}
+              />
+            )}
           </div>
 
           {/* Sample Page Switcher */}

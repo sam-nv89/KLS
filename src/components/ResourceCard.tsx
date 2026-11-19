@@ -56,12 +56,18 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B75E8] focus-visible:ring-inset"
         aria-label={`${labels.preview}: ${resource.title}`}
       >
-        <WorksheetPreview
-          variant={resource.previewVariant}
-          language={language}
-          title={resource.title}
-          className="border-b border-[#E5E2D9]"
-        />
+        {resource.thumbnailUrl ? (
+          <div className="w-full aspect-[4/3] overflow-hidden border-b border-[#E5E2D9] bg-[#F4F2EC]">
+            <img src={resource.thumbnailUrl} alt={resource.title} className="w-full h-full object-cover" loading="lazy" />
+          </div>
+        ) : (
+          <WorksheetPreview
+            variant={resource.previewVariant}
+            language={language}
+            title={resource.title}
+            className="border-b border-[#E5E2D9]"
+          />
+        )}
       </button>
 
       <div className="flex flex-col flex-1 p-5">

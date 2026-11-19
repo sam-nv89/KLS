@@ -5,6 +5,7 @@ import type {
   AnalyticsEvent,
   AppRoute,
   CategoryId,
+  KlsSiteContent,
   Language,
   LearningResource,
 } from './types/studio';
@@ -86,12 +87,35 @@ export default function App() {
   });
 
   const [resources, setResources] = useState<LearningResource[]>(INITIAL_RESOURCES);
+  const [siteContent] = useState<KlsSiteContent | undefined>(() => {
+    const wp = window as Window & { klsConfig?: { siteContent?: KlsSiteContent } };
+    return wp.klsConfig?.siteContent;
+  });
   const [downloadedIds, setDownloadedIds] = useState<Set<string>>(new Set());
   const [adZones, setAdZones] = useState<AdZoneConfig[]>(INITIAL_AD_ZONES);
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
 
   const [coffeeOpen, setCoffeeOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  // WordPress is the source of truth once at least one resource is published.
+  // Keep the bundled starter library as a safe fallback for local previews.
+  useEffect(() => {
+    const wp = window as Window & { klsConfig?: { restUrl?: string } };
+    if (!wp.klsConfig?.restUrl) return;
+    const restBase = wp.klsConfig.restUrl.endsWith('/') ? wp.klsConfig.restUrl : `${wp.klsConfig.restUrl}/`;
+    fetch(`${restBase}kls/v1/resources`, { cache: 'no-store' })
+      .then((response) => {
+        if (!response.ok) throw new Error('Could not load WordPress resources');
+        return response.json() as Promise<LearningResource[]>;
+      })
+      .then((wordpressResources) => {
+        if (wordpressResources.length > 0) setResources(wordpressResources);
+      })
+      .catch(() => {
+        // The static starter catalog remains available if WordPress REST is offline.
+      });
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -232,10 +256,13 @@ export default function App() {
     if (resource.isFree) {
       trackEvent('download_free_click', resource.title);
     }
-    // Keep generated worksheet text in its source language. The current PDF
-    // writer uses built-in ASCII fonts and cannot safely render localized text.
-    const sourceResource = resources.find((item) => item.id === resource.id) ?? resource;
-    triggerResourcePdfDownload(sourceResource);
+    if (resource.downloadUrl) {
+      window.location.assign(resource.downloadUrl);
+    } else {
+      // Local starter resources use the built-in example PDF generator.
+      const sourceResource = resources.find((item) => item.id === resource.id) ?? resource;
+      triggerResourcePdfDownload(sourceResource);
+    }
     trackEvent('pdf_downloaded', resource.title);
     setDownloadedIds((prev) => new Set(prev).add(resource.id));
     setResources((prev) =>
@@ -279,6 +306,7 @@ export default function App() {
         return (
           <HomePage
             language={language}
+            siteContent={siteContent}
             resources={localizedResources}
             cartIds={cartIds}
             downloadedIds={downloadedIds}
@@ -418,6 +446,7 @@ export default function App() {
       <Footer
         onNavigate={navigate}
         language={language}
+        siteContent={siteContent}
         onOpenCoffee={() => {
           trackEvent('support_visit', 'Footer Coffee');
           setCoffeeOpen(true);

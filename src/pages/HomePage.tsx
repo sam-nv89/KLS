@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Printer, Smile, Sparkles, Puzzle, Coffee, Mail, CheckCircle2 } from 'lucide-react';
-import type { AdZoneConfig, AppRoute, Language, LearningResource } from '../types/studio';
+import type { AdZoneConfig, AppRoute, KlsSiteContent, Language, LearningResource } from '../types/studio';
 import { CATEGORIES } from '../data/resources';
 import { TRANSLATIONS } from '../data/translations';
 import { HeroBrandShowcase } from '../components/BrandLogo';
@@ -19,6 +19,7 @@ interface HomePageProps {
   onAddToCart: (resource: LearningResource) => void;
   onSubscribeNewsletter: (email: string) => Promise<boolean>;
   onOpenCoffee: () => void;
+  siteContent?: KlsSiteContent;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
@@ -32,8 +33,10 @@ export const HomePage: React.FC<HomePageProps> = ({
   onAddToCart,
   onSubscribeNewsletter,
   onOpenCoffee,
+  siteContent,
 }) => {
   const t = TRANSLATIONS[language];
+  const homeText = siteContent?.home?.[language];
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -63,27 +66,38 @@ export const HomePage: React.FC<HomePageProps> = ({
               {t.hero.trustLine}
             </p>
             <h1 className="font-display text-[clamp(2.25rem,4vw,3.5rem)] font-extrabold text-[#0F2A5F] leading-[1.08] text-balance">
-              {t.hero.headline}
+              {homeText?.hero_title || t.hero.headline}
             </h1>
             <p className="text-base sm:text-lg text-[#475569] leading-relaxed max-w-lg">
-              {t.hero.subtitle}
+              {homeText?.hero_subtitle || t.hero.subtitle}
             </p>
             <div className="flex flex-wrap items-center gap-3 pt-1">
-              <button
+              {siteContent?.homePrimaryUrl ? <a
+                href={siteContent.homePrimaryUrl}
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#1B75E8] text-white text-sm font-semibold hover:bg-[#155EC0] transition-colors shadow-sm whitespace-nowrap"
+              >
+                <span>{homeText?.hero_cta_primary || t.hero.primaryCta}</span>
+                <ArrowRight className="w-4 h-4" />
+              </a> : <button
                 type="button"
                 onClick={() => onNavigate({ page: 'catalog', preset: 'free' })}
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#1B75E8] text-white text-sm font-semibold hover:bg-[#155EC0] transition-colors shadow-sm cursor-pointer whitespace-nowrap"
               >
-                <span>{t.hero.primaryCta}</span>
+                <span>{homeText?.hero_cta_primary || t.hero.primaryCta}</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
-              <button
+              </button>}
+              {siteContent?.homeSecondaryUrl ? <a
+                href={siteContent.homeSecondaryUrl}
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white border border-[#E5E2D9] text-[#0F2A5F] text-sm font-semibold hover:bg-[#F4F2EC] transition-colors whitespace-nowrap"
+              >
+                <span>{homeText?.hero_cta_secondary || t.hero.secondaryCta}</span>
+              </a> : <button
                 type="button"
                 onClick={() => onNavigate({ page: 'catalog', preset: 'all' })}
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white border border-[#E5E2D9] text-[#0F2A5F] text-sm font-semibold hover:bg-[#F4F2EC] transition-colors cursor-pointer whitespace-nowrap"
               >
-                <span>{t.hero.secondaryCta}</span>
-              </button>
+                <span>{homeText?.hero_cta_secondary || t.hero.secondaryCta}</span>
+              </button>}
             </div>
           </div>
 
@@ -98,10 +112,10 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div className="space-y-1.5">
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#0F2A5F]">
-              {t.sections.popularCategories}
+              {homeText?.popular_title || t.sections.popularCategories}
             </h2>
             <p className="text-sm sm:text-base text-[#475569]">
-              {t.sections.popularCategoriesSub}
+              {homeText?.popular_subtitle || t.sections.popularCategoriesSub}
             </p>
           </div>
         </div>
@@ -139,10 +153,10 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div className="space-y-1.5">
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#0F2A5F]">
-              {t.sections.freeResourcesTitle}
+              {homeText?.free_title || t.sections.freeResourcesTitle}
             </h2>
             <p className="text-sm sm:text-base text-[#475569]">
-              {t.sections.freeResourcesSub}
+              {homeText?.free_subtitle || t.sections.freeResourcesSub}
             </p>
           </div>
           <button
@@ -191,10 +205,10 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div className="space-y-1.5">
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#0F2A5F]">
-              {t.sections.featuredActivities}
+              {homeText?.featured_title || t.sections.featuredActivities}
             </h2>
             <p className="text-sm sm:text-base text-[#475569]">
-              {t.sections.featuredActivitiesSub}
+              {homeText?.featured_subtitle || t.sections.featuredActivitiesSub}
             </p>
           </div>
           <button

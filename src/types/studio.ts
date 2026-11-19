@@ -1,5 +1,12 @@
 export type Language = 'en' | 'es' | 'ru';
 
+export interface KlsSiteContent {
+  home?: Partial<Record<Language, Partial<Record<'hero_title' | 'hero_subtitle' | 'hero_cta_primary' | 'hero_cta_secondary' | 'popular_title' | 'popular_subtitle' | 'free_title' | 'free_subtitle' | 'featured_title' | 'featured_subtitle', string>>>>;
+  homePrimaryUrl?: string;
+  homeSecondaryUrl?: string;
+  social?: { pinterest?: string; telegram?: string };
+}
+
 export type CategoryId =
   | 'coloring-pages'
   | 'math-numbers'
@@ -72,6 +79,11 @@ export interface LearningResource {
   createdAt: string;
   featured: boolean;
   previewVariant: PreviewVariant;
+  downloadUrl?: string;
+  thumbnailUrl?: string;
+  wordpressUrl?: string;
+  /** Optional editorial translations supplied by WordPress for this resource. */
+  translations?: Partial<Record<Language, Partial<Pick<LearningResource, 'title' | 'shortDescription' | 'fullDescription' | 'skills' | 'whatsIncluded' | 'samplePages'>>>>;
 }
 
 export interface BlogArticle {

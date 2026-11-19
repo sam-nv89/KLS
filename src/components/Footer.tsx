@@ -1,6 +1,6 @@
 import React from 'react';
 import { Coffee } from 'lucide-react';
-import type { AppRoute, Language } from '../types/studio';
+import type { AppRoute, KlsSiteContent, Language } from '../types/studio';
 import { CATEGORIES } from '../data/resources';
 import { TRANSLATIONS } from '../data/translations';
 import { BrandLogoMark } from './BrandLogo';
@@ -9,10 +9,13 @@ interface FooterProps {
   onNavigate: (route: AppRoute) => void;
   language: Language;
   onOpenCoffee: () => void;
+  siteContent?: KlsSiteContent;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate, language, onOpenCoffee }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigate, language, onOpenCoffee, siteContent }) => {
   const t = TRANSLATIONS[language];
+  const pinterestUrl = siteContent ? siteContent.social?.pinterest : 'https://www.pinterest.com/KidsLearningStudio/';
+  const telegramUrl = siteContent ? siteContent.social?.telegram : 'https://t.me/KidsLearningStudio';
 
   return (
     <footer className="bg-[#0F2A5F] text-white mt-20">
@@ -118,12 +121,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, onOpenCoff
         <div className="mt-12 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
           <p>{t.footer.copyright}</p>
           <div className="flex items-center justify-center gap-3">
-            <a href="https://www.pinterest.com/KidsLearningStudio/" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 min-w-28 items-center justify-center rounded-full border border-white/20 px-4 font-semibold text-white/80 transition-colors hover:border-white/50 hover:bg-white/10 hover:text-white">
+            {pinterestUrl && <a href={pinterestUrl} target="_blank" rel="noopener noreferrer" className="inline-flex h-9 min-w-28 items-center justify-center rounded-full border border-white/20 px-4 font-semibold text-white/80 transition-colors hover:border-white/50 hover:bg-white/10 hover:text-white">
               Pinterest
-            </a>
-            <a href="https://t.me/KidsLearningStudio" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 min-w-28 items-center justify-center rounded-full border border-white/20 px-4 font-semibold text-white/80 transition-colors hover:border-white/50 hover:bg-white/10 hover:text-white">
+            </a>}
+            {telegramUrl && <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex h-9 min-w-28 items-center justify-center rounded-full border border-white/20 px-4 font-semibold text-white/80 transition-colors hover:border-white/50 hover:bg-white/10 hover:text-white">
               Telegram
-            </a>
+            </a>}
           </div>
         </div>
       </div>

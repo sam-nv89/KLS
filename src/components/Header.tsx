@@ -158,7 +158,7 @@ export const Header: React.FC<HeaderProps> = ({
                       onClick={() => { onChangeLanguage(code); setLanguageMenuOpen(false); }}
                       className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#1B75E8]/40 ${language === code ? 'text-[#125FC4]' : 'text-[#334155] hover:bg-[#F2F6FD] hover:text-[#125FC4] hover:shadow-[inset_0_0_0_1px_rgba(184,204,232,0.8)]'}`}
                     >
-                      <span className={`flex h-7 w-8 items-center justify-center rounded-lg text-[10px] font-bold tracking-wide transition-colors duration-150 ${language === code ? 'text-[#64748B]' : 'bg-[#F1F4F8]/75 text-[#64748B] group-hover:bg-white group-hover:text-[#1B75E8]'}`}>{code.toUpperCase()}</span>
+                      <span className="flex h-7 w-8 items-center justify-center rounded-lg bg-[#F1F4F8]/75 text-[10px] font-bold tracking-wide text-[#64748B] transition-colors duration-150 group-hover:bg-white group-hover:text-[#1B75E8]">{code.toUpperCase()}</span>
                       <span className="flex-1 text-sm font-medium transition-colors duration-150">{name}</span>
                       {language === code && <Check className="h-4 w-4 text-[#1B75E8]" aria-hidden="true" />}
                     </button>

@@ -11,7 +11,6 @@ import {
   Mail,
 } from 'lucide-react';
 import type { AdZoneConfig, AppRoute, Language, LearningResource } from '../types/studio';
-import { CATEGORIES } from '../data/resources';
 import { TRANSLATIONS } from '../data/translations';
 import { WorksheetPreview } from '../components/WorksheetPreview';
 import { ResourceCard } from '../components/ResourceCard';
@@ -53,7 +52,7 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
   const [optInEmail, setOptInEmail] = useState('');
   const [optInDone, setOptInDone] = useState(false);
 
-  const category = CATEGORIES.find((c) => c.id === resource.category);
+  const categoryName = t.categories[resource.category];
   const related = allResources
     .filter((r) => r.id !== resource.id && (r.category === resource.category || r.ageGroup === resource.ageGroup))
     .slice(0, 3);
@@ -71,9 +70,9 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-14">
       {/* Breadcrumbs */}
-      <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-xs font-medium text-[#64748B]">
+      <nav aria-label={t.detail.home} className="flex flex-wrap items-center gap-2 text-xs font-medium text-[#64748B]">
         <button type="button" onClick={() => onNavigate({ page: 'home' })} className="hover:text-[#0F2A5F] cursor-pointer">
-          Home
+          {t.detail.home}
         </button>
         <ChevronRight className="w-3.5 h-3.5" />
         <button
@@ -81,7 +80,7 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
           onClick={() => onNavigate({ page: 'catalog', preset: 'all', category: resource.category })}
           className="hover:text-[#0F2A5F] cursor-pointer"
         >
-          {category?.name}
+          {categoryName}
         </button>
         <ChevronRight className="w-3.5 h-3.5" />
         <span className="text-[#0F2A5F] font-semibold">{resource.title}</span>
@@ -94,6 +93,7 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
           <div className="rounded-3xl overflow-hidden border border-[#E5E2D9] bg-white shadow-sm">
             <WorksheetPreview
               variant={resource.previewVariant}
+              language={language}
               title={resource.title}
               pageIndex={activePageIndex}
             />
@@ -123,11 +123,11 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
         <div className="lg:col-span-5 space-y-6">
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#64748B]">
-              <span>{category?.name}</span>
+              <span>{categoryName}</span>
               <span aria-hidden="true">·</span>
-              <span>Ages {resource.ageGroup}</span>
+              <span>{t.ui.ages} {resource.ageGroup}</span>
               <span aria-hidden="true">·</span>
-              <span className="font-mono-num">{resource.pages} Pages</span>
+              <span className="font-mono-num">{resource.pages} {t.detail.pagesUnit}</span>
               <span aria-hidden="true">·</span>
               <span>{resource.fileFormat}</span>
             </div>
@@ -146,7 +146,7 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
             {resource.isFree ? (
               <>
                 <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold text-[#15803D]">Free Printable PDF</span>
+                  <span className="text-lg font-bold text-[#15803D]">{t.detail.freePrintablePdf}</span>
                   <span className="font-mono-num text-xs text-[#64748B]">{resource.fileSize}</span>
                 </div>
                 <button
@@ -155,11 +155,11 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
                   className="w-full h-12 rounded-xl bg-[#1B75E8] text-white text-sm font-semibold hover:bg-[#155EC0] transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {isDownloaded ? <Check className="w-4.5 h-4.5" /> : <Download className="w-4.5 h-4.5" />}
-                  <span>{isDownloaded ? 'Downloaded! Click to Download Again' : 'Download Free PDF'}</span>
+                  <span>{isDownloaded ? t.detail.downloadAgain : t.detail.downloadPdf}</span>
                 </button>
                 <p className="text-xs text-[#64748B] flex items-center gap-1.5">
                   <Printer className="w-3.5 h-3.5 shrink-0" />
-                  <span>Direct PDF download · No sign-up required · Home &amp; classroom print friendly</span>
+                  <span>{t.detail.directDownload} · {t.detail.noSignup} · {t.detail.printReady}</span>
                 </p>
               </>
             ) : isPurchased ? (
@@ -226,7 +226,7 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
 
           {/* Skills Developed */}
           <div className="space-y-2.5">
-            <h2 className="font-display text-sm font-bold text-[#0F2A5F]">Skills Developed</h2>
+            <h2 className="font-display text-sm font-bold text-[#0F2A5F]">{t.detail.skills}</h2>
             <p className="text-sm text-[#475569]">
               {resource.skills.join(' · ')}
             </p>
@@ -234,7 +234,7 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
 
           {/* What's Included */}
           <div className="space-y-2.5">
-            <h2 className="font-display text-sm font-bold text-[#0F2A5F]">What’s Included</h2>
+            <h2 className="font-display text-sm font-bold text-[#0F2A5F]">{t.detail.included}</h2>
             <ul className="space-y-2 text-sm text-[#475569]">
               {resource.whatsIncluded.map((line) => (
                 <li key={line} className="flex items-start gap-2">
@@ -254,14 +254,14 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
                 className="inline-flex items-center gap-2 text-xs font-semibold text-[#92400E] hover:underline cursor-pointer"
               >
                 <Coffee className="w-4 h-4" />
-                <span>Love our free resources? Buy us a coffee and help us create more!</span>
+                <span>{t.detail.coffeeLine}</span>
               </button>
 
               {!optInDone ? (
                 <form onSubmit={handleOptionalSubscribe} className="p-4 rounded-2xl bg-[#F4F2EC] space-y-2.5">
                   <label htmlFor="optional-sub" className="text-xs font-semibold text-[#0F2A5F] flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5 text-[#1B75E8]" />
-                    <span>Optional: Get new free printables in your inbox weekly</span>
+                    <span>{t.detail.optionalNewsletter}</span>
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -269,20 +269,20 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
                       type="email"
                       value={optInEmail}
                       onChange={(e) => setOptInEmail(e.target.value)}
-                      placeholder="Email address (optional)"
+                      placeholder={t.detail.optionalPlaceholder}
                       className="flex-1 h-9 px-3 rounded-lg bg-white border border-[#E5E2D9] text-xs text-[#0F2A5F] focus:outline-none focus:border-[#1B75E8]"
                     />
                     <button
                       type="submit"
                       className="px-3.5 h-9 rounded-lg bg-[#0F2A5F] text-white text-xs font-semibold hover:bg-[#1B3B7B] transition-colors cursor-pointer"
                     >
-                      Join
+                      {t.detail.join}
                     </button>
                   </div>
                 </form>
               ) : (
                 <p className="text-xs font-semibold text-[#15803D]">
-                  Thank you! You are subscribed to weekly free packs.
+                  {t.detail.subscribedMsg}
                 </p>
               )}
             </div>
@@ -291,19 +291,19 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
       </div>
 
       {/* Ad Zone Below Resource Content (disabled by default) */}
-      <AdSlot zone={belowAdZone} />
+      <AdSlot zone={belowAdZone} language={language} />
 
       {/* Related Materials */}
       {related.length > 0 && (
         <section className="pt-8 border-t border-[#E5E2D9] space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-2xl font-bold text-[#0F2A5F]">Similar Learning Materials</h2>
+            <h2 className="font-display text-2xl font-bold text-[#0F2A5F]">{t.detail.similar}</h2>
             <button
               type="button"
               onClick={() => onNavigate({ page: 'catalog', preset: 'all', category: resource.category })}
               className="text-sm font-semibold text-[#1B75E8] hover:underline cursor-pointer"
             >
-              Browse {category?.name}
+              {t.detail.browse} {categoryName}
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -311,6 +311,7 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
               <ResourceCard
                 key={item.id}
                 resource={item}
+                language={language}
                 onOpenResource={(slug) => onNavigate({ page: 'resource', slug })}
                 onDownloadFree={onDownloadFree}
                 onAddToCart={onAddToCart}
@@ -318,6 +319,11 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
                   downloadFree: t.actions.downloadFree,
                   addToCart: t.actions.addToCart,
                   freeLabel: t.actions.freeLabel,
+                  ages: t.ui.ages,
+                  pageShort: language === 'ru' ? 'стр.' : language === 'es' ? 'pág.' : 'pp',
+                  preview: t.ui.preview,
+                  downloaded: t.ui.downloaded,
+                  categoryNames: t.categories,
                 }}
               />
             ))}

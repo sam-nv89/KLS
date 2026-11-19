@@ -1,5 +1,5 @@
 import React from 'react';
-import type { PreviewVariant } from '../types/studio';
+import type { Language, PreviewVariant } from '../types/studio';
 
 interface WorksheetPreviewProps {
   variant: PreviewVariant;
@@ -7,6 +7,7 @@ interface WorksheetPreviewProps {
   pageIndex?: number;
   className?: string;
   compact?: boolean;
+  language?: Language;
 }
 
 export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
@@ -15,7 +16,9 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
   pageIndex = 0,
   className = '',
   compact = false,
+  language = 'en',
 }) => {
+  const tr = (en: string, es: string, ru: string) => language === 'ru' ? ru : language === 'es' ? es : en;
   const backdropMap: Record<PreviewVariant, string> = {
     'coloring-dino': 'bg-[#FFF7ED]',
     'coloring-space': 'bg-[#EFF6FF]',
@@ -59,7 +62,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
         <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
           <rect x="14" y="14" width="192" height="24" rx="4" fill="#F4F2EC" />
           <text x="24" y="30" fontSize="10" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-            Practice Sheet · Page 2
+            {tr('Practice Sheet · Page 2', 'Ficha de práctica · Página 2', 'Лист для практики · Страница 2')}
           </text>
           <rect x="14" y="48" width="192" height="214" rx="6" fill="none" stroke="#CBD5E1" strokeDasharray="4 4" strokeWidth="1.5" />
           {/* 3 structured activity rows */}
@@ -87,7 +90,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
         <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
           <rect x="14" y="14" width="192" height="24" rx="4" fill="#F4F2EC" />
           <text x="24" y="30" fontSize="10" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-            Bonus Cut &amp; Match · Page 3
+            {tr('Bonus Cut & Match · Page 3', 'Recorta y empareja · Página 3', 'Бонус: вырежи и найди пару · Страница 3')}
           </text>
           <g transform="translate(22, 52)">
             {[0, 1, 2, 3].map((idx) => {
@@ -105,7 +108,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
             })}
           </g>
           <text x="28" y="264" fontSize="8.5" fill="#64748B" fontFamily="Plus Jakarta Sans, sans-serif">
-            Cut along the dotted cards &amp; match pairs
+            {tr('Cut along the dotted cards & match pairs', 'Recorta por los puntos y empareja', 'Вырежи карточки по пунктиру и найди пары')}
           </text>
         </svg>
       );
@@ -117,7 +120,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
           <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
             <rect x="14" y="14" width="192" height="22" rx="4" fill="#FFF7ED" />
             <text x="24" y="29" fontSize="10" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-              COLOR THE FRIENDLY DINO
+              {tr('COLOR THE FRIENDLY DINO', 'COLOREA AL DINO AMIGABLE', 'РАСКРАСЬ ДРУЖЕЛЮБНОГО ДИНОЗАВРА')}
             </text>
             {/* Clouds */}
             <path d="M 34 64 Q 42 50, 56 56 Q 68 48, 76 62 Q 86 64, 80 74 L 34 74 Z" fill="none" stroke="#0F2A5F" strokeWidth="2" />
@@ -150,7 +153,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
           <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
             <rect x="14" y="14" width="192" height="22" rx="4" fill="#EFF6FF" />
             <text x="24" y="29" fontSize="10" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-              SPACE ROCKET COLORING
+              {tr('SPACE ROCKET COLORING', 'COLOREA EL COHETE ESPACIAL', 'РАСКРАСЬ КОСМИЧЕСКУЮ РАКЕТУ')}
             </text>
             {/* Stars */}
             <polygon points="44,68 48,78 58,78 50,84 53,94 44,88 35,94 38,84 30,78 40,78" fill="#FEF08A" stroke="#0F2A5F" strokeWidth="1.8" />
@@ -163,7 +166,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
             <path d="M 134 146 L 156 176 L 134 170 Z" fill="#FCA5A5" stroke="#0F2A5F" strokeWidth="2.2" />
             <path d="M 96 172 Q 110 212, 124 172" fill="#FDE047" stroke="#0F2A5F" strokeWidth="2.2" />
             <text x="58" y="246" fontSize="11" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-              3 · 2 · 1 · BLAST OFF!
+              {tr('3 · 2 · 1 · BLAST OFF!', '3 · 2 · 1 · ¡DESPEGUE!', '3 · 2 · 1 · ПУСК!')}
             </text>
           </svg>
         );
@@ -174,7 +177,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
           <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
             <rect x="14" y="14" width="192" height="22" rx="4" fill="#EFF6FF" />
             <text x="24" y="29" fontSize="10" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-              {variant === 'math-addition' ? 'COUNT & ADD GROUPS' : 'COUNT & TRACE 1–3'}
+              {variant === 'math-addition' ? tr('COUNT & ADD GROUPS', 'CUENTA Y SUMA', 'СЧИТАЙ И СКЛАДЫВАЙ') : tr('COUNT & TRACE 1–3', 'CUENTA Y TRAZA DEL 1 AL 3', 'СЧИТАЙ И ОБВОДИ 1–3')}
             </text>
             {[1, 2, 3].map((num, idx) => {
               const y = 50 + idx * 68;
@@ -198,7 +201,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
               );
             })}
             <text x="24" y="264" fontSize="8.5" fill="#64748B" fontFamily="Plus Jakarta Sans, sans-serif">
-              Count aloud · Trace the dotted number
+              {tr('Count aloud · Trace the dotted number', 'Cuenta en voz alta · Traza el número', 'Считай вслух · Обведи цифру по пунктиру')}
             </text>
           </svg>
         );
@@ -209,7 +212,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
           <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
             <rect x="14" y="14" width="192" height="22" rx="4" fill="#F0FDF4" />
             <text x="24" y="29" fontSize="10" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-              {variant === 'alphabet-phonics' ? 'PHONICS & LETTER SOUNDS' : 'TRACE LETTERS A · B · C'}
+              {variant === 'alphabet-phonics' ? tr('PHONICS & LETTER SOUNDS', 'SONIDOS Y LETRAS', 'ЗВУКИ И БУКВЫ') : tr('TRACE LETTERS A · B · C', 'TRAZA LAS LETRAS A · B · C', 'ОБВЕДИ БУКВЫ A · B · C')}
             </text>
             {[
               { letter: 'Aa', word: 'Apple', color: '#EF4444' },
@@ -238,7 +241,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
               );
             })}
             <text x="24" y="264" fontSize="8.5" fill="#64748B" fontFamily="Plus Jakarta Sans, sans-serif">
-              Follow numbered arrows · Say each sound
+              {tr('Follow numbered arrows · Say each sound', 'Sigue las flechas · Pronuncia cada sonido', 'Следуй стрелкам · Произнеси каждый звук')}
             </text>
           </svg>
         );
@@ -249,22 +252,22 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
           <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
             <rect x="14" y="14" width="192" height="22" rx="4" fill="#FEFCE8" />
             <text x="24" y="29" fontSize="10" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-              SHAPES &amp; COLORS MATCH
+              {tr('SHAPES & COLORS MATCH', 'FORMAS Y COLORES', 'ФИГУРЫ И ЦВЕТА')}
             </text>
             {/* Circle */}
             <circle cx="62" cy="86" r="28" fill="#DBEAFE" stroke="#1B75E8" strokeWidth="2.5" strokeDasharray="5 3" />
-            <text x="45" y="128" fontSize="9.5" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">CIRCLE</text>
+            <text x="45" y="128" fontSize="9.5" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">{tr('CIRCLE', 'CÍRCULO', 'КРУГ')}</text>
             {/* Triangle */}
             <polygon points="158,58 128,112 188,112" fill="#FEF08A" stroke="#CA8A04" strokeWidth="2.5" strokeDasharray="5 3" />
-            <text x="134" y="128" fontSize="9.5" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">TRIANGLE</text>
+            <text x="134" y="128" fontSize="9.5" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">{tr('TRIANGLE', 'TRIÁNGULO', 'ТРЕУГОЛЬНИК')}</text>
             {/* Square */}
             <rect x="34" y="152" width="56" height="56" rx="4" fill="#DCFCE7" stroke="#16A34A" strokeWidth="2.5" strokeDasharray="5 3" />
-            <text x="43" y="224" fontSize="9.5" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">SQUARE</text>
+            <text x="43" y="224" fontSize="9.5" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">{tr('SQUARE', 'CUADRADO', 'КВАДРАТ')}</text>
             {/* Star */}
             <polygon points="158,150 166,170 188,170 170,183 177,204 158,191 139,204 146,183 128,170 150,170" fill="#FFEDD5" stroke="#EA580C" strokeWidth="2.2" />
-            <text x="145" y="224" fontSize="9.5" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">STAR</text>
+            <text x="145" y="224" fontSize="9.5" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">{tr('STAR', 'ESTRELLA', 'ЗВЕЗДА')}</text>
             <text x="34" y="256" fontSize="8.5" fill="#64748B" fontFamily="Plus Jakarta Sans, sans-serif">
-              Trace each dashed outline &amp; name its color
+              {tr('Trace each dashed outline & name its color', 'Traza cada contorno y di su color', 'Обведи фигуру и назови её цвет')}
             </text>
           </svg>
         );
@@ -275,7 +278,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
           <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
             <rect x="14" y="14" width="192" height="22" rx="4" fill="#F5F3FF" />
             <text x="24" y="29" fontSize="10" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-              {variant === 'puzzles-maze' ? 'ANIMAL GARDEN MAZE' : 'MATCH EACH SHADOW'}
+              {variant === 'puzzles-maze' ? tr('ANIMAL GARDEN MAZE', 'LABERINTO DEL JARDÍN', 'ЛАБИРИНТ В САДУ') : tr('MATCH EACH SHADOW', 'EMPAREJA LAS SOMBRAS', 'НАЙДИ ПАРУ ТЕНИ')}
             </text>
             {variant === 'puzzles-maze' ? (
               <g>
@@ -301,7 +304,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
               </g>
             )}
             <text x="32" y="256" fontSize="8.5" fill="#64748B" fontFamily="Plus Jakarta Sans, sans-serif">
-              Draw a clean line to connect the matching pair
+              {tr('Draw a clean line to connect the matching pair', 'Une cada pareja con una línea', 'Соедини подходящие пары линией')}
             </text>
           </svg>
         );
@@ -312,7 +315,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
           <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
             <rect x="14" y="14" width="192" height="22" rx="4" fill="#F0F9FF" />
             <text x="24" y="29" fontSize="10" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-              SCISSOR &amp; PENCIL PATHS
+              {tr('SCISSOR & PENCIL PATHS', 'TIJERAS Y TRAZOS', 'НОЖНИЦЫ И ЛИНИИ')}
             </text>
             {/* Path 1: Straight */}
             <circle cx="32" cy="72" r="9" fill="#0EA5E9" />
@@ -327,7 +330,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
             <polyline points="46,196 74,174 102,216 130,174 158,216 184,196" fill="none" stroke="#0F2A5F" strokeWidth="2.4" strokeDasharray="6 4" />
             <polygon points="186,188 196,196 186,204" fill="#F5B700" />
             <text x="30" y="254" fontSize="8.5" fill="#64748B" fontFamily="Plus Jakarta Sans, sans-serif">
-              Snip or trace slowly along each dashed line
+              {tr('Snip or trace slowly along each dashed line', 'Recorta o traza despacio por cada línea', 'Вырезай или обводи пунктир не спеша')}
             </text>
           </svg>
         );
@@ -337,7 +340,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
           <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
             <rect x="14" y="14" width="192" height="22" rx="4" fill="#FDF2F8" />
             <text x="24" y="29" fontSize="10" fontWeight="700" fill="#0F2A5F" fontFamily="Outfit, sans-serif">
-              RAINBOW CUT &amp; PASTE CRAFT
+              {tr('RAINBOW CUT & PASTE CRAFT', 'MANUALIDAD DE ARCOÍRIS', 'РАДУЖНАЯ ПОДЕЛКА')}
             </text>
             {/* Rainbow arcs */}
             <path d="M 38 168 A 72 72 0 0 1 182 168" fill="none" stroke="#EF4444" strokeWidth="10" strokeLinecap="round" />
@@ -353,7 +356,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
             <circle cx="110" cy="216" r="10" fill="#DBEAFE" stroke="#1B75E8" strokeDasharray="3 2" strokeWidth="1.8" />
             <circle cx="148" cy="216" r="10" fill="#DBEAFE" stroke="#1B75E8" strokeDasharray="3 2" strokeWidth="1.8" />
             <text x="34" y="256" fontSize="8.5" fill="#64748B" fontFamily="Plus Jakarta Sans, sans-serif">
-              Cut out clouds &amp; raindrops to assemble
+              {tr('Cut out clouds & raindrops to assemble', 'Recorta las nubes y las gotas para montar', 'Вырежи облака и капли и собери поделку')}
             </text>
           </svg>
         );
@@ -364,10 +367,10 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
           <svg viewBox="0 0 220 280" className="w-full h-full" aria-hidden="true">
             <rect x="14" y="14" width="192" height="46" rx="8" fill="#1B75E8" />
             <text x="26" y="34" fontSize="11.5" fontWeight="800" fill="#FFFFFF" fontFamily="Outfit, sans-serif">
-              PRESCHOOL BINDER
+              {tr('PRESCHOOL BINDER', 'CUADERNO PREESCOLAR', 'ТЕТРАДЬ ДЛЯ ДОШКОЛЬНИКОВ')}
             </text>
             <text x="26" y="49" fontSize="8.5" fontWeight="600" fill="#DBEAFE" fontFamily="Plus Jakarta Sans, sans-serif">
-              120 Pages · ABC · 123 · Shapes · Logic
+              {tr('120 Pages · ABC · 123 · Shapes · Logic', '120 páginas · ABC · 123 · Formas · Lógica', '120 стр. · ABC · 123 · Фигуры · Логика')}
             </text>
             {/* 4 mini module preview tiles */}
             <rect x="18" y="74" width="88" height="76" rx="8" fill="#F0FDF4" stroke="#86EFAC" />
@@ -383,7 +386,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
             <circle cx="158" cy="198" r="18" fill="#7C3AED" fillOpacity="0.25" stroke="#7C3AED" strokeWidth="2.5" />
 
             <text x="28" y="258" fontSize="8.5" fontWeight="600" fill="#475569" fontFamily="Plus Jakarta Sans, sans-serif">
-              5 Complete Printable Workbooks Included
+              {tr('5 Complete Printable Workbooks Included', 'Incluye 5 cuadernos imprimibles completos', 'В наборе 5 полных тетрадей для печати')}
             </text>
           </svg>
         );
@@ -396,7 +399,7 @@ export const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({
         compact ? 'p-3' : 'p-5'
       } ${className}`}
       role="img"
-      aria-label={title ? `Printable worksheet preview: ${title}` : 'Printable worksheet preview'}
+      aria-label={title ? `${tr('Printable worksheet preview', 'Vista previa de la ficha', 'Предпросмотр рабочего листа')}: ${title}` : tr('Printable worksheet preview', 'Vista previa de la ficha', 'Предпросмотр рабочего листа')}
     >
       {/* Subtle stacked sheet shadow behind the main page */}
       <div

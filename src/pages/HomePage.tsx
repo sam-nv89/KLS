@@ -116,6 +116,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             >
               <WorksheetPreview
                 variant={category.previewVariant}
+                language={language}
                 title={t.categories[category.id]}
                 compact
                 className="border-b border-[#E5E2D9]"
@@ -125,7 +126,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   {t.categories[category.id]}
                 </h3>
                 <p className="mt-1 text-xs text-[#64748B] line-clamp-2 leading-relaxed">
-                  {category.shortDesc}
+                  {t.categoryDescriptions[category.id]}
                 </p>
               </div>
             </button>
@@ -159,6 +160,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <ResourceCard
               key={resource.id}
               resource={resource}
+              language={language}
               onOpenResource={(slug) => onNavigate({ page: 'resource', slug })}
               onDownloadFree={onDownloadFree}
               onAddToCart={onAddToCart}
@@ -168,6 +170,11 @@ export const HomePage: React.FC<HomePageProps> = ({
                 downloadFree: t.actions.downloadFree,
                 addToCart: t.actions.addToCart,
                 freeLabel: t.actions.freeLabel,
+                ages: t.ui.ages,
+                pageShort: language === 'ru' ? 'стр.' : language === 'es' ? 'pág.' : 'pp',
+                preview: t.ui.preview,
+                downloaded: t.ui.downloaded,
+                categoryNames: t.categories,
               }}
             />
           ))}
@@ -176,7 +183,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* Optional Homepage Ad Zone (disabled by default) */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <AdSlot zone={homeAdZone} />
+        <AdSlot zone={homeAdZone} language={language} />
       </div>
 
       {/* 4. Featured Activities */}
@@ -205,6 +212,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <ResourceCard
               key={resource.id}
               resource={resource}
+              language={language}
               onOpenResource={(slug) => onNavigate({ page: 'resource', slug })}
               onDownloadFree={onDownloadFree}
               onAddToCart={onAddToCart}
@@ -214,6 +222,11 @@ export const HomePage: React.FC<HomePageProps> = ({
                 downloadFree: t.actions.downloadFree,
                 addToCart: t.actions.addToCart,
                 freeLabel: t.actions.freeLabel,
+                ages: t.ui.ages,
+                pageShort: language === 'ru' ? 'стр.' : language === 'es' ? 'pág.' : 'pp',
+                preview: t.ui.preview,
+                downloaded: t.ui.downloaded,
+                categoryNames: t.categories,
               }}
             />
           ))}
@@ -259,7 +272,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#1B75E8]">
                 <Mail className="w-4 h-4" />
-                <span>Weekly Free Printables</span>
+                <span>{t.ui.weeklyPrintables}</span>
               </div>
               <h2 className="font-display text-2xl font-bold text-[#0F2A5F]">
                 {t.sections.newsletterTitle}
@@ -282,7 +295,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t.sections.newsletterPlaceholder}
-                  aria-label="Email address"
+                  aria-label={t.ui.emailAddress}
                   className="flex-1 h-11 px-4 rounded-xl bg-white border border-[#CBD5E1] text-sm text-[#0F2A5F] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#1B75E8]"
                 />
                 <button
@@ -306,7 +319,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 {t.sections.supportCopy}
               </h2>
               <p className="text-sm text-[#475569]">
-                Every voluntary coffee helps us design new free coloring pages, tracing sheets, and math games.
+                {t.ui.supportBody}
               </p>
             </div>
             <div>

@@ -29,6 +29,8 @@ import {
 } from './pages/StaticPages';
 import { SupportPage } from './pages/SupportPage';
 import { StudioAdminPage } from './pages/StudioAdminPage';
+import { localizeResource } from './data/localizedResources';
+import { TRANSLATIONS } from './data/translations';
 
 function parsePathToRoute(pathname: string): AppRoute {
   const clean = pathname.replace(/\/+$/, '') || '/';
@@ -221,6 +223,7 @@ export default function App() {
   }, [route, resources]);
 
   const handleDownloadResource = (resource: LearningResource) => {
+    const t = TRANSLATIONS[language];
     if (resource.isFree) {
       trackEvent('download_free_click', resource.title);
     }
@@ -230,16 +233,18 @@ export default function App() {
     setResources((prev) =>
       prev.map((r) => (r.id === resource.id ? { ...r, downloadCount: r.downloadCount + 1 } : r))
     );
-    showToast(`Downloaded ${resource.slug}-kids-learning-studio.pdf`);
+    showToast(`${t.actions.downloadFree}: ${resource.title}`);
   };
 
   const cartIds = new Set<string>();
   const purchasedIds = new Set<string>();
+  const localizedResources = resources.map((resource) => localizeResource(resource, language));
 
   const handleSubscribeNewsletter = async (email: string): Promise<boolean> => {
+    const t = TRANSLATIONS[language];
     const wp = window as Window & { klsConfig?: { restUrl: string; nonce: string } };
     if (!wp.klsConfig?.restUrl || !wp.klsConfig.nonce) {
-      showToast('Newsletter is not connected to WordPress yet.');
+      showToast(t.ui.newsletterNotConnected);
       return false;
     }
     try {
@@ -250,10 +255,10 @@ export default function App() {
       });
       if (!response.ok) throw new Error('Subscription failed');
       trackEvent('newsletter_subscribed', email);
-      showToast('Subscribed! Thank you for joining.');
+      showToast(t.ui.newsletterDone);
       return true;
     } catch {
-      showToast('Could not subscribe right now. Please try again later.');
+      showToast(t.ui.newsletterFailed);
       return false;
     }
   };
@@ -266,7 +271,7 @@ export default function App() {
         return (
           <HomePage
             language={language}
-            resources={resources}
+            resources={localizedResources}
             cartIds={cartIds}
             downloadedIds={downloadedIds}
             adZones={adZones}
@@ -285,7 +290,7 @@ export default function App() {
           <CatalogPage
             key={`${route.preset ?? 'all'}-${route.category ?? 'all'}-${route.query ?? ''}`}
             language={language}
-            resources={resources}
+            resources={localizedResources}
             initialPreset={route.preset}
             initialCategory={route.category as CategoryId | undefined}
             initialQuery={route.query}
@@ -298,20 +303,20 @@ export default function App() {
           />
         );
       case 'resource': {
-        const found = resources.find((r) => r.slug === route.slug);
+        const found = localizedResources.find((r) => r.slug === route.slug);
         if (!found) {
           return (
             <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-4">
-              <h1 className="font-display text-3xl font-bold text-[#0F2A5F]">Resource Not Found</h1>
+              <h1 className="font-display text-3xl font-bold text-[#0F2A5F]">{TRANSLATIONS[language].ui.resourceNotFound}</h1>
               <p className="text-sm text-[#475569]">
-                We couldn’t find that printable pack. Browse all resources in our catalog instead.
+                {TRANSLATIONS[language].ui.resourceNotFoundHelp}
               </p>
               <button
                 type="button"
                 onClick={() => navigate({ page: 'catalog', preset: 'all' })}
                 className="px-5 py-2.5 rounded-xl bg-[#1B75E8] text-white text-sm font-semibold cursor-pointer"
               >
-                Browse Catalog
+                {TRANSLATIONS[language].ui.browseCatalog}
               </button>
             </div>
           );
@@ -320,7 +325,7 @@ export default function App() {
           <ResourceDetailPage
             key={found.id}
             resource={found}
-            allResources={resources}
+            allResources={localizedResources}
             language={language}
             isInCart={cartIds.has(found.id)}
             isPurchased={purchasedIds.has(found.id)}
@@ -343,22 +348,23 @@ export default function App() {
           <BlogPage
             slug={route.slug}
             adZones={adZones}
-            resources={resources}
+            resources={localizedResources}
             onNavigate={navigate}
+            language={language}
           />
         );
       case 'about':
-        return <AboutUsPage onNavigate={navigate} />;
+        return <AboutUsPage onNavigate={navigate} language={language} />;
       case 'contact':
-        return <ContactUsPage />;
+        return <ContactUsPage language={language} />;
       case 'faq':
-        return <FaqPage />;
+        return <FaqPage language={language} />;
       case 'support':
-        return <SupportPage />;
+        return <SupportPage language={language} />;
       case 'privacy':
       case 'cookies':
       case 'terms':
-        return <LegalPage type={route.page} />;
+        return <LegalPage type={route.page} language={language} />;
       case 'studio-admin':
         return (
           <StudioAdminPage
@@ -396,7 +402,7 @@ export default function App() {
 
       {/* Optional Header Ad Zone (disabled by default) */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <AdSlot zone={headerAdZone} />
+        <AdSlot zone={headerAdZone} language={language} />
       </div>
 
       <main className="flex-1">{renderPage()}</main>
@@ -413,9 +419,10 @@ export default function App() {
       <CoffeeModal
         isOpen={coffeeOpen}
         onClose={() => setCoffeeOpen(false)}
+        language={language}
       />
 
-      <CookieNotice onNavigate={navigate} />
+      <CookieNotice onNavigate={navigate} language={language} />
 
       {/* Crisp Non-Blocking Toast Feedback */}
       {toastMsg && (

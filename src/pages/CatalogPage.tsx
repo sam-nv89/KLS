@@ -81,15 +81,12 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
     setSearchQuery('');
   };
 
-  const pageHeading =
-    priceFilter === 'free'
-      ? 'Free Printable Resources'
-      : 'Educational Resource Library';
+  const pageHeading = priceFilter === 'free' ? t.catalog.freeHeading : t.catalog.allHeading;
 
   const pageSubtitle =
     priceFilter === 'free'
-      ? 'Instant PDF downloads with zero sign-up required. Ready for home printers and preschool classrooms.'
-      : 'Browse our complete collection of free printable worksheets and activity packs for ages 2–6.';
+      ? t.catalog.freeSub
+      : t.catalog.allSub;
 
   const firstRow = filtered.slice(0, 6);
   const restRows = filtered.slice(6);
@@ -110,8 +107,8 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
         {/* Segmented Filter Tabs */}
         <div className="inline-flex items-center p-1 bg-[#F4F2EC] rounded-xl border border-[#E5E2D9] shrink-0 self-start">
           {[
-            { id: 'all', label: 'All Resources' },
-            { id: 'free', label: 'Free PDFs' },
+            { id: 'all', label: t.catalog.allResources },
+            { id: 'free', label: t.catalog.freePdfs },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -140,7 +137,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
               : 'bg-white border-[#E5E2D9] text-[#475569] hover:border-[#0F2A5F]'
           }`}
         >
-          All Categories
+          {t.catalog.allCategories}
         </button>
         {CATEGORIES.map((cat) => (
           <button
@@ -166,40 +163,40 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by title, skill, or topic..."
-            aria-label="Search worksheets"
+            placeholder={t.catalog.searchPlaceholder}
+            aria-label={t.catalog.searchPlaceholder}
             className="w-full h-10 pl-10 pr-3 rounded-xl bg-[#FCFBF8] border border-[#E5E2D9] text-sm text-[#0F2A5F] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#1B75E8]"
           />
         </div>
 
         <div className="lg:col-span-2">
           <select
-            aria-label="Filter by age group"
+            aria-label={t.ui.ages}
             value={selectedAge}
             onChange={(e) => setSelectedAge(e.target.value as AgeGroup | 'all')}
             className="w-full h-10 px-3 rounded-xl bg-[#FCFBF8] border border-[#E5E2D9] text-xs font-semibold text-[#0F2A5F] focus:outline-none focus:border-[#1B75E8] cursor-pointer"
           >
-            <option value="all">All Ages (2–6)</option>
-            <option value="2-3">Ages 2–3</option>
-            <option value="3-4">Ages 3–4</option>
-            <option value="4-5">Ages 4–5</option>
-            <option value="5-6">Ages 5–6</option>
+            <option value="all">{t.catalog.allAges}</option>
+            <option value="2-3">{t.catalog.ages2to3}</option>
+            <option value="3-4">{t.catalog.ages3to4}</option>
+            <option value="4-5">{t.catalog.ages4to5}</option>
+            <option value="5-6">{t.catalog.ages5to6}</option>
           </select>
         </div>
 
         <div className="lg:col-span-2">
           <select
-            aria-label="Filter by theme"
+            aria-label={t.catalog.allThemes}
             value={selectedTheme}
             onChange={(e) => setSelectedTheme(e.target.value as ResourceTheme | 'all')}
             className="w-full h-10 px-3 rounded-xl bg-[#FCFBF8] border border-[#E5E2D9] text-xs font-semibold text-[#0F2A5F] focus:outline-none focus:border-[#1B75E8] cursor-pointer"
           >
-            <option value="all">All Themes</option>
-            <option value="Foundations">Foundations</option>
-            <option value="Animals">Animals</option>
-            <option value="Space">Space</option>
-            <option value="Seasons">Seasons</option>
-            <option value="Everyday Life">Everyday Life</option>
+            <option value="all">{t.catalog.allThemes}</option>
+            <option value="Foundations">{t.catalog.foundations}</option>
+            <option value="Animals">{t.catalog.animals}</option>
+            <option value="Space">{t.catalog.space}</option>
+            <option value="Seasons">{t.catalog.seasons}</option>
+            <option value="Everyday Life">{t.catalog.everydayLife}</option>
           </select>
         </div>
 
@@ -207,21 +204,21 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
           <div className="flex-1 relative">
             <SlidersHorizontal className="w-3.5 h-3.5 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <select
-              aria-label="Sort resources"
+              aria-label={t.catalog.popular}
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'popular' | 'newest')}
               className="w-full h-10 pl-8 pr-3 rounded-xl bg-[#FCFBF8] border border-[#E5E2D9] text-xs font-semibold text-[#0F2A5F] focus:outline-none focus:border-[#1B75E8] cursor-pointer"
             >
-              <option value="popular">Most Popular</option>
-              <option value="newest">Newest First</option>
+              <option value="popular">{t.catalog.popular}</option>
+              <option value="newest">{t.catalog.newest}</option>
             </select>
           </div>
           <button
             type="button"
             onClick={resetFilters}
-            title="Reset filters"
+            title={t.catalog.reset}
             className="h-10 px-3 rounded-xl bg-[#F4F2EC] text-[#475569] hover:text-[#0F2A5F] transition-colors cursor-pointer"
-            aria-label="Reset filters"
+            aria-label={t.catalog.reset}
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -231,23 +228,23 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
       {/* Result Count */}
       <div className="flex items-center justify-between text-xs font-medium text-[#64748B]">
         <span>
-          Showing <strong className="font-mono-num text-[#0F2A5F]">{filtered.length}</strong> printable resource{filtered.length === 1 ? '' : 's'}
+          {t.catalog.showing} <strong className="font-mono-num text-[#0F2A5F]">{filtered.length}</strong> {filtered.length === 1 ? t.catalog.resourceSingular : t.catalog.resourcePlural}
         </span>
       </div>
 
       {/* Results Grid */}
       {filtered.length === 0 ? (
         <div className="rounded-3xl bg-white border border-[#E5E2D9] p-12 text-center space-y-4">
-          <p className="font-display text-lg font-bold text-[#0F2A5F]">No matching worksheets found</p>
+          <p className="font-display text-lg font-bold text-[#0F2A5F]">{t.catalog.noResults}</p>
           <p className="text-sm text-[#64748B] max-w-md mx-auto">
-            Try clearing one of your filters or browse our complete free library.
+            {t.catalog.noResultsHelp}
           </p>
           <button
             type="button"
             onClick={resetFilters}
             className="px-5 py-2.5 rounded-xl bg-[#1B75E8] text-white text-sm font-semibold hover:bg-[#155EC0] transition-colors cursor-pointer"
           >
-            Show All Resources
+            {t.catalog.showAll}
           </button>
         </div>
       ) : (
@@ -257,6 +254,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
               <ResourceCard
                 key={resource.id}
                 resource={resource}
+                language={language}
                 onOpenResource={(slug) => onNavigate({ page: 'resource', slug })}
                 onDownloadFree={onDownloadFree}
                 onAddToCart={onAddToCart}
@@ -266,12 +264,17 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                   downloadFree: t.actions.downloadFree,
                   addToCart: t.actions.addToCart,
                   freeLabel: t.actions.freeLabel,
+                  ages: t.ui.ages,
+                  pageShort: language === 'ru' ? 'стр.' : language === 'es' ? 'pág.' : 'pp',
+                  preview: t.ui.preview,
+                  downloaded: t.ui.downloaded,
+                  categoryNames: t.categories,
                 }}
               />
             ))}
           </div>
 
-          {restRows.length > 0 && <AdSlot zone={betweenAdZone} />}
+          {restRows.length > 0 && <AdSlot zone={betweenAdZone} language={language} />}
 
           {restRows.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -279,6 +282,7 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                 <ResourceCard
                   key={resource.id}
                   resource={resource}
+                  language={language}
                   onOpenResource={(slug) => onNavigate({ page: 'resource', slug })}
                   onDownloadFree={onDownloadFree}
                   onAddToCart={onAddToCart}
@@ -288,6 +292,11 @@ export const CatalogPage: React.FC<CatalogPageProps> = ({
                     downloadFree: t.actions.downloadFree,
                     addToCart: t.actions.addToCart,
                     freeLabel: t.actions.freeLabel,
+                  ages: t.ui.ages,
+                  pageShort: language === 'ru' ? 'стр.' : language === 'es' ? 'pág.' : 'pp',
+                  preview: t.ui.preview,
+                  downloaded: t.ui.downloaded,
+                  categoryNames: t.categories,
                   }}
                 />
               ))}

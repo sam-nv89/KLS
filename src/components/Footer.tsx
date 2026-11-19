@@ -79,36 +79,36 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, language, onOpenCoff
 
           {/* Studio & Legal */}
           <div className="lg:col-span-3 space-y-3">
-            <h4 className="font-display text-sm font-bold text-white">{t.footer.companyTitle} &amp; {t.footer.legalTitle}</h4>
+            <h4 className="font-display text-sm font-bold text-white">{language === 'ru' ? 'Студия и документы' : language === 'es' ? 'Estudio y documentos' : 'Studio & Policies'}</h4>
             <ul className="space-y-2 text-sm text-[#CBD5E1]">
               <li>
                 <button type="button" onClick={() => onNavigate({ page: 'about' })} className="hover:text-white transition-colors cursor-pointer">
-                  About Us
+                  {t.ui.aboutUs}
                 </button>
               </li>
               <li>
                 <button type="button" onClick={() => onNavigate({ page: 'contact' })} className="hover:text-white transition-colors cursor-pointer">
-                  Contact Us
+                  {t.ui.contactUs}
                 </button>
               </li>
               <li>
                 <button type="button" onClick={() => onNavigate({ page: 'faq' })} className="hover:text-white transition-colors cursor-pointer">
-                  FAQ
+                  {t.ui.faq}
                 </button>
               </li>
               <li>
                 <button type="button" onClick={() => onNavigate({ page: 'privacy' })} className="hover:text-white transition-colors cursor-pointer">
-                  Privacy Policy
+                  {t.ui.privacyPolicy}
                 </button>
               </li>
               <li>
                 <button type="button" onClick={() => onNavigate({ page: 'cookies' })} className="hover:text-white transition-colors cursor-pointer">
-                  Cookie Policy
+                  {t.ui.cookiePolicy}
                 </button>
               </li>
               <li>
                 <button type="button" onClick={() => onNavigate({ page: 'terms' })} className="hover:text-white transition-colors cursor-pointer">
-                  Terms &amp; Conditions
+                  {t.ui.terms}
                 </button>
               </li>
             </ul>

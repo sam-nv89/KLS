@@ -120,7 +120,7 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               onClick={() => setSearchOpen((v) => !v)}
               className="w-10 h-10 inline-flex items-center justify-center rounded-xl text-[#475569] hover:text-[#0F2A5F] hover:bg-[#F4F2EC] transition-colors cursor-pointer"
-              aria-label="Search resources"
+              aria-label={t.ui.searchResources}
               aria-expanded={searchOpen}
             >
               <Search className="w-4.5 h-4.5" />
@@ -129,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="hidden sm:block relative" ref={languageMenuRef}>
               <button
                 type="button"
-                aria-label="Select language"
+                aria-label={t.ui.languageLabel}
                 aria-haspopup="listbox"
                 aria-expanded={languageMenuOpen}
                 onClick={() => setLanguageMenuOpen((open) => !open)}
@@ -144,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <ChevronDown className={`h-3.5 w-3.5 text-[#64748B] transition-transform duration-200 ${languageMenuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
               </button>
               {languageMenuOpen && (
-                <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-44 origin-top-right rounded-2xl border border-[#E5EAF2] bg-white p-1.5 shadow-[0_16px_40px_-16px_rgba(15,42,95,0.32)] ring-1 ring-black/[0.03] animate-in fade-in slide-in-from-top-1 duration-150" role="listbox" aria-label="Select language">
+                <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-44 origin-top-right rounded-2xl border border-[#E5EAF2] bg-white p-1.5 shadow-[0_16px_40px_-16px_rgba(15,42,95,0.32)] ring-1 ring-black/[0.03] animate-in fade-in slide-in-from-top-1 duration-150" role="listbox" aria-label={t.ui.languageLabel}>
                   {([
                     { code: 'en', name: 'English' },
                     { code: 'es', name: 'Español' },
@@ -174,7 +174,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#FEF3C7] text-[#92400E] hover:bg-[#FDE68A] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               <Coffee className="w-3.5 h-3.5" />
-              <span>Coffee</span>
+              <span>{t.ui.coffee}</span>
             </button>
 
             <button
@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
               type="submit"
               className="h-11 px-5 rounded-xl bg-[#1B75E8] text-white text-sm font-semibold hover:bg-[#155EC0] transition-colors whitespace-nowrap cursor-pointer"
             >
-              Search
+              {t.ui.search}
             </button>
           </form>
         )}
@@ -219,8 +219,8 @@ export const Header: React.FC<HeaderProps> = ({
               { label: t.nav.freeResources, route: { page: 'catalog', preset: 'free' } as AppRoute },
               { label: t.nav.blog, route: { page: 'blog' } as AppRoute },
               { label: t.nav.aboutUs, route: { page: 'about' } as AppRoute },
-              { label: 'FAQ', route: { page: 'faq' } as AppRoute },
-              { label: 'Buy Us a Coffee', route: { page: 'support' } as AppRoute },
+              { label: t.ui.faq, route: { page: 'faq' } as AppRoute },
+              { label: t.sections.buyCoffeeBtn, route: { page: 'support' } as AppRoute },
             ].map((item) => (
               <button
                 key={item.label}
@@ -236,7 +236,7 @@ export const Header: React.FC<HeaderProps> = ({
             ))}
           </div>
           <div className="pt-3 border-t border-[#E5E2D9] flex items-center justify-between">
-            <span className="text-xs font-medium text-[#64748B]">Language</span>
+            <span className="text-xs font-medium text-[#64748B]">{language === 'ru' ? 'Язык' : language === 'es' ? 'Idioma' : 'Language'}</span>
             <div className="flex items-center gap-1">
               {(['en', 'es', 'ru'] as Language[]).map((lng) => (
                 <button

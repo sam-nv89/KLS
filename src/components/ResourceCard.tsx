@@ -1,6 +1,6 @@
 import React from 'react';
 import { Download, Check } from 'lucide-react';
-import type { LearningResource } from '../types/studio';
+import type { CategoryId, Language, LearningResource } from '../types/studio';
 import { CATEGORIES } from '../data/resources';
 import { WorksheetPreview } from './WorksheetPreview';
 
@@ -11,10 +11,16 @@ interface ResourceCardProps {
   onAddToCart?: (resource: LearningResource) => void;
   isInCart?: boolean;
   isDownloaded?: boolean;
+  language?: Language;
   labels?: {
     downloadFree: string;
     addToCart: string;
     freeLabel: string;
+    ages: string;
+    pageShort: string;
+    preview: string;
+    downloaded: string;
+    categoryNames: Record<CategoryId, string>;
   };
 }
 
@@ -25,13 +31,22 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   onAddToCart: _onAddToCart,
   isInCart: _isInCart = false,
   isDownloaded = false,
+  language = 'en',
   labels = {
     downloadFree: 'Download Free',
     addToCart: 'Add to Cart',
     freeLabel: 'Free PDF',
+    ages: 'Ages',
+    pageShort: 'pp',
+    preview: 'Preview',
+    downloaded: 'Downloaded',
+    categoryNames: {
+      'coloring-pages': 'Coloring Pages', 'math-numbers': 'Math & Numbers', 'alphabet-letters': 'Alphabet & Letters',
+      'shapes-colors': 'Shapes & Colors', 'puzzles-matching': 'Puzzles & Matching', 'fine-motor-skills': 'Fine Motor Skills', 'creative-activities': 'Creative Activities',
+    },
   },
 }) => {
-  const categoryName = CATEGORIES.find((c) => c.id === resource.category)?.name ?? 'Printable';
+  const categoryName = labels.categoryNames[resource.category] ?? CATEGORIES.find((c) => c.id === resource.category)?.name ?? 'Printable';
 
   return (
     <article className="group flex flex-col bg-white rounded-2xl border border-[#E5E2D9] overflow-hidden transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-md">
@@ -39,10 +54,11 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         type="button"
         onClick={() => onOpenResource(resource.slug)}
         className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B75E8] focus-visible:ring-inset"
-        aria-label={`Preview ${resource.title}`}
+        aria-label={`${labels.preview}: ${resource.title}`}
       >
         <WorksheetPreview
           variant={resource.previewVariant}
+          language={language}
           title={resource.title}
           className="border-b border-[#E5E2D9]"
         />
@@ -53,9 +69,9 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         <div className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-[#64748B]">
           <span>{categoryName}</span>
           <span aria-hidden="true">·</span>
-          <span>Ages {resource.ageGroup}</span>
+          <span>{labels.ages} {resource.ageGroup}</span>
           <span aria-hidden="true">·</span>
-          <span className="font-mono-num">{resource.pages} pp</span>
+          <span className="font-mono-num">{resource.pages} {labels.pageShort}</span>
         </div>
 
         <h3 className="mt-2 font-display text-lg font-bold text-[#0F2A5F] leading-snug">
@@ -82,7 +98,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[#1B75E8] text-white hover:bg-[#155EC0] transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1B75E8]"
               >
                 {isDownloaded ? <Check className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
-                <span>{isDownloaded ? 'Downloaded' : labels.downloadFree}</span>
+                <span>{isDownloaded ? labels.downloaded : labels.downloadFree}</span>
               </button>
         </div>
       </div>

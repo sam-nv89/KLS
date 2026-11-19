@@ -1,0 +1,6 @@
+{
+  "name": "Kids Learning Studio",
+  "description": "Free and printable educational worksheets, coloring pages, math games, and preschool activity packs for children ages 2–6.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
